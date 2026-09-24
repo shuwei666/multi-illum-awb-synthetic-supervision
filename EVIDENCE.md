@@ -22,3 +22,7 @@ f59d53302550a8e59da3bbc58c6dca7d2971ba18b485f3e684932cd6040c829f
 
 Known evidence gaps are deliberately retained in the report: `_12` reflectance preprocessing provenance, final per-image t4 evaluation archive, multi-seed stability, fair-budget baselines, and a truly sealed test.
 
+The complete runner scripts for the historical NUS-pool baseline (stage A) and
+the `_1 + _12` expansion run (stage C) are not in the current archive. Their
+checkpoint-selection policy and any unrecorded hyperparameters are therefore
+reported as unverified rather than inferred from the later training script.

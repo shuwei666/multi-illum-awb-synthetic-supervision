@@ -8,6 +8,7 @@ categories: ["Imaging"]
 toc:
   enable: true
   auto: true
+math: true
 ---
 
 # 从单光源参考构造多光源监督：LSMI Sony 实验链复盘
@@ -32,7 +33,7 @@ toc:
 4. 后续的“扩反射率”是把来源从 `_1` 扩到 `_1 + _12`，不是第一次引入 LSMI。
 5. random、depth、physical、confidence-guided 和 shadow-aware 改变的是空间混光 `alpha(x)`；基本 relighting 方程不变。
 6. 训练的梯度监督来自人工生成的逐像素光源图；真实多光源 dense train map 不进入 synth-only 主线的训练 loss。
-7. **真实 Sony val 227 场景的 dense GT 每轮参与最佳 checkpoint 选择。**它不是 synthetic validation。
+7. 归档的现行训练脚本以及可核验的 B、D、E 阶段都使用**真实 Sony val 227 场景的 dense GT**选择最佳 checkpoint，它不是 synthetic validation；阶段 A、C 的完整运行脚本缺失，不能把这一选模规则无条件外推给它们。
 8. 最终 `t4_clean_ft` 是从 `t3_expand_phys/best.pt` 出发，在同一扩反射率 physical-alpha 合成集上让全部网络参数继续训练 50 epoch，而不是新建一种数据或冻结部分网络。
 9. 真实 Sony test 114 场景用于报告结果，但也在多轮方法开发中被反复查看，因此 2.834° 是最佳 practical pilot，不是严格封存后的独立最终测试。
 
@@ -54,17 +55,17 @@ toc:
 
 在简化的线性成像模型下：
 
-\[
+$$
 I(x)=r(x)\odot \ell(x)
-\]
+$$
 
 早期 `_1` 分支以 LSMI Sony 的单光源白平衡参考作为反射率近似。代码归档把它描述为：`LSMI _1_gt white-balanced`。因此它不是“任意未标注 RAW”，而是依赖单光源参考资产。
 
 在保存过的合成样本中，也可以通过
 
-\[
+$$
 r(x)\approx I(x)/(\ell(x)+\epsilon)
-\]
+$$
 
 恢复出 `r`。
 
@@ -78,9 +79,9 @@ r(x)\approx I(x)/(\ell(x)+\epsilon)
 
 构造逐像素权重 `alpha(x)`：
 
-\[
+$$
 \ell(x)=\alpha(x)L_1+[1-\alpha(x)]L_2
-\]
+$$
 
 实验过的方案包括：
 
@@ -95,9 +96,9 @@ r(x)\approx I(x)/(\ell(x)+\epsilon)
 
 合成输入为：
 
-\[
+$$
 I_{syn}(x)=r(x)\odot \ell(x)
-\]
+$$
 
 因为 `L1`、`L2` 和 `alpha(x)` 都由生成器控制，`ell(x)` 本身就是精确已知的逐像素训练 GT。relighting 操作在各阶段基本相同，变化的是 `r`、光源池或 `alpha(x)` 的来源。
 
@@ -154,9 +155,9 @@ NUS 3.800° 到 LSMI 3.351° 的约 0.45° 改善，是整个链条中最大的�
 
 ### 阶段 C：扩展反射率来源
 
-在 LSMI 光源池基础上，把反射率源从 `_1` 扩展为 `_1 + _12`，约 794 变为 1588。记录中的 `t1_expand_ft` 达到 **3.176°**，相对对应的 3.289° 改善约 0.113°。
+在 LSMI 光源池基础上，把反射率源从 `_1` 扩展为 `_1 + _12`，约 794 变为 1588。该分支沿用 random-alpha，仍通过同一 relighting 方程生成输入和 `ell(x)` 标签；记录中的 `t1_expand_ft` 达到 **3.176°**，相对对应的 3.289° 改善约 0.113°。
 
-历史记录写明该阶段属于从 LSMI-light 实验 checkpoint 继续训练的 100-epoch/early-stop-40 任务，但当前归档缺少当时的完整 `build_task12.py/run_task12.sh`，所以更细的初始化 checkpoint 与最佳 epoch 不作推测。
+历史记录写明该阶段属于从 LSMI-light 实验 checkpoint 继续训练的 100-epoch/early-stop-40 任务，但当前归档缺少当时的完整 `build_task12.py/run_task12.sh`，所以更细的初始化 checkpoint、最佳 epoch和 checkpoint 选择规则不作推测。
 
 ### 阶段 D：扩反射率 + physical-alpha
 
@@ -198,7 +199,7 @@ t4_clean_ft/best.pt
 
 用户记忆中的“validation 也使用真实 test 数据”需要拆成两个概念：
 
-- **Validation**：真实 LSMI Sony val，227 场景。训练期间每个 epoch 都计算真实 dense GT 误差，并据此保存 `best.pt`。
+- **Validation**：对归档训练脚本及可核验的 B、D、E 阶段，使用真实 LSMI Sony val，227 场景；每个 epoch 计算真实 dense GT 误差并据此保存 `best.pt`。阶段 A、C 因完整运行脚本缺失，具体选模规则标记为未验证。
 - **Test**：真实 LSMI Sony test，114 场景。它不参与梯度，也不直接选择单次训练中的 best checkpoint；但历史开发中多次用于比较 random、physical、expanded、shadow、noise 等方案，实际上已承担部分开发集作用。
 
 因此，真实 dense GT 的使用应分三层报告：
@@ -206,22 +207,24 @@ t4_clean_ft/best.pt
 | 环节 | 是否使用真实多光源 dense GT | 作用 |
 |---|---:|---|
 | synth-only 梯度训练 | 否 | loss 使用人工构造的 `ell(x)` |
-| checkpoint 选择 | 是 | 真实 val dense GT 选择每个 run 的 best |
+| checkpoint 选择 | 已确认阶段是 | B、D、E 使用真实 val dense GT 选 best；A、C 未验证 |
 | 方法开发与结果报告 | 是 | 真实 test 被多轮查看并报告 |
 
 准确术语是：**no real multi-illuminant dense maps in gradient-based parameter training**，而不是 fully label-free、raw-only 或 completely annotation-free。
 
-## 6. 结果总表
+## 6. 逐阶段数据、监督和结果总表
 
-| 阶段 | 反射率 | 光源池 | alpha / 训练动作 | 真实 test mean |
-|---|---|---|---|---:|
-| A | LSMI `_1` | NUS | random-alpha baseline | 3.800° |
-| B1 | LSMI `_1` | LSMI train | random-alpha scratch | 3.351° |
-| B2 | LSMI `_1` | LSMI train | B0 后 random-FT 50ep | 3.289° |
-| B3 | LSMI `_1` | LSMI train | B0 后 physical-FT 50ep | **3.225°** |
-| C | LSMI `_1 + _12` | LSMI train | 扩反射率 fine-tuning | 3.176° |
-| D | LSMI `_1 + _12` | LSMI train | expanded + physical，50ep | 2.922° |
-| E | 同 D | LSMI train | 从 D best 再继续 50ep | **2.834°** |
+每个 synth-only 阶段都生成 `I_syn=r*ell(x)` 作为网络输入、生成器已知的 `ell(x)` 作为梯度标签。下面把 split 与未知项显式列出。
+
+| 阶段 | 反射率 / 光源池 | alpha 与训练动作 | train 输入→标签 | validation / 选模 | test | test mean |
+|---|---|---|---|---|---|---:|
+| A | LSMI `_1` / NUS | random-alpha baseline | synthetic `I_syn` → synthetic `ell(x)`；规模和完整超参未验证 | 历史运行脚本缺失，未验证 | real Sony 114 + dense GT | 3.800° |
+| B1 | LSMI `_1` / LSMI train | random-alpha scratch 120ep | 794-source synthetic → synthetic `ell(x)` | real Sony val 227 + dense GT 选 best | real Sony 114 + dense GT | 3.351° |
+| B2 | 同 B1 | B0 后 random-FT 50ep | 同 B1 | real Sony val 227 + dense GT 选 best | real Sony 114 + dense GT | 3.289° |
+| B3 | LSMI `_1` / LSMI train | B0 后 physical-FT 50ep | physical synthetic → synthetic `ell(x)` | real Sony val 227 + dense GT 选 best | real Sony 114 + dense GT | **3.225°** |
+| C | LSMI `_1 + _12` / LSMI train | 扩反射率 random-alpha FT；记录为100ep/early-stop-40 | expanded synthetic → synthetic `ell(x)` | 完整运行脚本缺失，具体选模未验证 | real Sony 114 + dense GT | 3.176° |
+| D | LSMI `_1 + _12` / LSMI train | expanded + physical，50ep | physical expanded synthetic → synthetic `ell(x)` | real Sony val 227 + dense GT 选 best | real Sony 114 + dense GT | 2.922° |
+| E | 同 D | 从 D best 继续50ep | 同 D | real Sony val 227 + dense GT 选 best | real Sony 114 + dense GT | **2.834°** |
 
 最终 114 场景 test 分布：
 
@@ -283,4 +286,3 @@ t4_clean_ft/best.pt
 - 最佳 checkpoint SHA256：`f59d53302550a8e59da3bbc58c6dca7d2971ba18b485f3e684932cd6040c829f`。
 
 当前没有公开原始数据、模型权重或服务器凭据。本报告是对已有实验资产的可追溯复盘，不代表重新运行或独立复现了全部结果。
-
