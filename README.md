@@ -4,7 +4,24 @@ Updated: 2026-09-25 · Agent: codex
 
 当前主线是 **LSMI Nikon + 固定 One-Net**：仅以 train 单光源图像及其 Light1 做白平衡，通过重光照生成训练图像和光照标签，研究减少真实多光源逐像素标注依赖的可能性。允许所有 train 全局白点，包括多光源场景各个 Light1/2/3 的颜色；真实混光图像、逐像素 GT、混合权重及其派生信息禁止用于新方法的构造、训练、开发选型或调参。人工生成的光照 map 可作合成监督。
 
-第一、二轮训练与统一评测均已完成，**尚未达到原 One-Net baseline 的性能**。第二轮在真实混光最终评分前按冻结开发分数选出 AC；独立复核确认 AC 的 18 项严格均值门槛通过 0/18，全部其他候选也为 0/18。第三轮分别检验原始单光源占比、每图光源主导比例、端点角色和同场景白点配对；协议、实施与独立校准闸门已通过。**截至 2026-09-25 13:46（Asia/Shanghai），O 组正式运行，尚无第三轮完整结果。**
+前三轮训练与统一评测均已完成，**尚未达到原 One-Net baseline 的性能**。第三轮按冻结开发分数选中 O，组合规则复用 O，不新增 COMBO。独立复核确认 O 及 AC/B/ER/EP 均为 **0/18** 格严格低于 baseline；本轮未触发追加 seed 1/2 的授权条件。运行正确性 PASS 不等于性能通过。
+
+## 第三轮当前结果
+
+官方 test 的平均角误差（度），越低越好；patch 是有效 patch pooled mean，pixel 是各图有效像素均值的等权平均。204 张图、52,224 个有效 patch，固定 seed 0。
+
+| 模型 | test patch | test pixel |
+|---|---:|---:|
+| 原 baseline | 1.969242 | 2.167129 |
+| AC（复用） | 2.431420 | 2.552636 |
+| O（开发预选） | 2.423858 | 2.537886 |
+| B | 2.429720 | 2.553529 |
+| ER | 2.530040 | 2.651859 |
+| EP | 2.490060 | 2.607614 |
+
+O/B/ER/EP 各完成 69,600 次更新。O 的开发分数从 AC 的 0.886318 降至 0.857399，但不代表所有开发子项改善，更不证明 test 达标；O test patch/pixel 仍比 baseline 高 0.454616° / 0.370757°。[第三轮完整负结果](docs/nikon_round3_results.md)保留全部 val/test 子集与证据边界。
+
+AN/PS 源图—整对白点关联对照已在第三轮真实结果之前预声明；当前仅 helper 与 toy renderer 通过 CPU 独立验证，完整 runner、真实 Nikon 校准和训练仍待完成。构造 parent 固定为开发选中的 O；触发依据是目标未达成，不能声称整个迭代是新盲测，也不作方法有效性或新颖性结论。
 
 ## 第二轮当前结果
 
@@ -22,7 +39,7 @@ Nikon 官方 test，204 张 composition 图、52,224 个有效 patch；seed 0，
 
 五个新增训练各完成 69,600 次更新。AC 比 M 的 test patch mean 降低 0.29437°，仍比 baseline 高 0.46218°；这仅支持本次固定 seed/预算下的观察。不能根据 test 改选 winner，也不能据此认定单光源来源路线普遍不可行。全部子集的 patch/pixel 结果和选择时间见 [第二轮结果](docs/nikon_round2_results.md)。
 
-当前目标为 `val/test × all/single/multi × patch pooled / patch image-balanced / pixel image-balanced` 共 18 格均严格低于原 seed 0 baseline 的同机复算值。开发预选 seed 0 候选全部达标后，才冻结配置追加 seed 1/2；三 seed 算术均值亦须逐格达标，并披露各 seed 全部结果。第二轮尚未通过首道门槛，多 seed 目标未完成。第一轮的“接近”阈值仅保留为历史探索记录。
+当前目标为 `val/test × all/single/multi × patch pooled / patch image-balanced / pixel image-balanced` 共 18 格均严格低于原 seed 0 baseline 的同机复算值。开发预选 seed 0 候选全部达标后，才冻结配置追加 seed 1/2；三 seed 算术均值亦须逐格达标，并披露各 seed 全部结果。第二、三轮均未通过首道门槛，多 seed 目标未完成。第一轮的“接近”阈值仅保留为历史探索记录。
 
 ## 第一轮历史结果
 
@@ -54,9 +71,11 @@ M 是四个合成训练模型中的最好结果，仍比 baseline 高 0.75655°�
 - [Nikon 第一轮：协议、完整结果与限制](docs/nikon_round1.md)
 - [第二轮：历史冻结方案与完成状态](docs/nikon_round2_plan.md)
 - [第二轮：全部结果、冻结选择与限制](docs/nikon_round2_results.md)
-- [第三轮：机制、对照与实施阶段快照](docs/nikon_round3_plan.md)
+- [第三轮：机制、冻结对照与完成状态](docs/nikon_round3_plan.md)
+- [第三轮：全部结果、冻结选择与限制](docs/nikon_round3_results.md)
 - [第一轮机读结果与哈希](results/nikon_round1/summary.json)
 - [第二轮 18 格机读结果与哈希](results/nikon_round2/summary.json)
+- [第三轮 18 格机读结果与哈希](results/nikon_round3/summary.json)
 - [证据范围与发布边界](EVIDENCE.md)
 - [Sony 历史实验复盘](docs/sony_historical_report.md)及[其历史证据索引](docs/sony_historical_evidence.md)
 

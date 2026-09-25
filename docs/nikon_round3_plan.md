@@ -1,8 +1,8 @@
 # Nikon 第三轮：单光源占比、光源主导比例与端点配对
 
-Updated: 2026-09-25 13:46 +08:00 · Agent: codex · Status: protocol, implementation and calibration gates passed; formal O training running; no complete results
+Updated: 2026-09-25 · Agent: codex · Status: completed; performance FAIL; contract ADEQUATE; operational correctness PASS
 
-本页是 2026-09-25 13:46（Asia/Shanghai）的阶段快照，不是结果报告。协议已批准，实施与独立校准闸门均为 PASS / ADEQUATE，O 组已进入正式运行，尚无第三轮完整结果。这些通过仅覆盖相应启动条件，不代表性能验收通过。第二轮开发预选的 **AC** 是共同构造参照；不得因已查看的 test 表现更换参照或最终选择规则。以下机制都是待检验假设，未证明能改善真实混光泛化。
+本页保留第三轮事前冻结方案；四组正式训练与最终评测现已完成，结果见[第三轮负结果](nikon_round3_results.md)。开发预选 **O**，组合规则复用 O，未新增 COMBO。O 与 AC/B/ER/EP 全部为 0/18 格低于原 baseline，未触发追加 seed 1/2。此前协议、实施与校准闸门通过，仅证明启动条件具备，不能替代性能成功。第二轮开发预选的 **AC** 始终是共同构造参照，最终选择规则未根据 test 改变。以下机制是事前假设，不是经本轮证明有效的方法。
 
 ## 数据边界与成像假设
 
@@ -42,3 +42,9 @@ ER/EP 每轮使用相同 pair index。ER 在分层组内对第二端点作随机
 当前验收是 `val/test × all/single/multi × patch pooled / patch image-balanced / pixel image-balanced` 共 18 格。开发预选 seed 0 模型须全部严格低于原 seed 0 baseline 的同机复算值，再冻结配置补 seed 1/2；三 seed 算术均值也须逐格达标，并披露每个 seed 的全部结果。最多五个新增 seed 0 训练，达标后再追加两次重复；不宣称每个 seed 或统计上都优越。
 
 历史 test 已被查看，本轮属于探索性迭代。官方 split、各模型图像清单和评测聚合保持一致，val/test 场景互斥；完成须有 checkpoint、完整评测和独立复核，不能用进程退出替代。几何/深度引导与额外明暗建模不属于本批实施范围。
+
+## 已预声明的后续条件对照
+
+AN/PS 契约于 2026-09-25 14:05:54 +08:00、第三轮真实结果之前记录；只在第三轮及其必要重复未完成严格目标后考虑启动。构造 parent 是开发预选 O，不是按 test 排名选择，也不加载其训练权重。AN 用本源 Light1 和合法同场景伙伴，PS 在角色/消费贡献匹配层中置换整对白点；保持端点和联合对白点的实际消费计数，10 个无伙伴源保留 parent 路径。它测试整对白点与源图的关联，不单独识别第一端点效果。
+
+当前仅端点 helper 与 toy renderer 通过有界 CPU 独立复核，完整训练接入、真实 Nikon 校准与正式训练尚未完成。至多两个新增 seed 0 对照，若新开发预选通过原 18 格，才追加固定配置两次重复。二元验收失败是明确披露的启动反馈；这不是根据第三轮 test 数值重调参数的新方案，不支持 GT-blind、有效性或新颖性宣称。
