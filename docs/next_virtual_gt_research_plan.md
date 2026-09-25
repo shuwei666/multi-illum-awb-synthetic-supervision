@@ -1,335 +1,191 @@
-# 下一阶段 Virtual GT 策略（GPT-5.6 Sol）
+# Virtual GT 下一步方案与空间 alpha 说明
 
 Updated: 2026-09-25  
-Author: **GPT-5.6 Sol**  
-Status: **研究意见 / 下一阶段实验策略，不代表已验证结论**
+本次修订：**ChatGPT 的研究意见**  
+状态：**文档方案，尚未完成本批实现、校准或训练；不是性能结论，也不改变当前暂停状态。**
 
-> 本版吸收 Nikon round 1–3、AN/PS 最新结果，以及一个关键修正：**content/source 与 illumination state 不应互斥分配。** 同一个单光源 source 可以在训练过程中反复生成 original、global-relit 和 spatial mixed 等不同光照状态。Virtual GT 的优势应来自 on-the-fly illumination-state coverage，而不是把有限 source 切成若干互斥子集。
+> 本版取代历史提交 `6737a2c` 中的下一步优先级，吸收用户与 Codex 的纠正。目标不变：固定 One-Net 作为快速验证器，通过单光源来源构造虚拟逐像素光源监督，争取超过原 One-Net 的真实单/多光源训练范式。本次只更新建议文档，不修改训练代码、历史结果、验收契约或训练授权。
 
-## 1. 当前证据如何重新理解
+## 1. 一句话策略
 
-当前固定 One-Net 的主要结果：
+**保留现有在线增强和三种可选光照状态；状态编排只做一个小对照，主要新增对照是在不改变混光色度图和标签的前提下，分离检验空间明暗及其与混光比例的关联。**
 
-| 模型 | test all patch | test single | test multi |
+第一批不同时改状态配对、共享 crop、主次光比例、亮度和 patch 采样。每个实验都必须有明确的直接参照。
+
+## 2. 已核实事实与需要撤回的判断
+
+### 当前结果
+
+以下为已归档的 test patch pooled mean，单位为度，越低越好。来源：[第二轮结果](nikon_round2_results.md)、[第三轮结果](nikon_round3_results.md)及[机读摘要](../results/nikon_round3/summary.json)。
+
+| 配置 | 全部 | 单光源 | 多光源 |
 |---|---:|---:|---:|
-| 原 baseline | 1.96924 | 1.34651 | 2.53378 |
+| 原 One-Net baseline | 1.969242 | 1.346506 | 2.533778 |
 | M | 2.72580 | 2.00299 | 3.38104 |
-| AC | 2.43142 | 1.68796 | 3.10540 |
-| O | **2.42386** | **1.52070** | 3.24261 |
-| B | 2.42972 | 1.67393 | **3.11488** |
-| AN | 2.56261 | — | — |
-| PS | 2.70852 | — | — |
+| AC | 2.431420 | 1.687961 | 3.105397 |
+| O | 2.423858 | 1.520702 | 3.242606 |
+| B | 2.429720 | 1.673928 | 3.114878 |
 
-O 的操作不是新的 spatial GT。它相对 AC 把 25% 单端点 global-relit 分支替换成原始单光源，因此：
+AC 的训练组成是 25% 原始单光源、25% 人工单端点全局重光照、50% M 人工混光。O 只把其中 25% 人工单光源换成原图，得到 50% 原始、0% 人工全局、50% M 混光；crop 与混光构造不变。B 在 AC 的混光分支上增加整图混光偏置，并不是在 O 上改动。具体定义见[第三轮冻结方案](nikon_round3_plan.md)。
 
-- AC = 25% original + 25% global-relit + 50% M mixed；
-- O = 50% original + 50% M mixed。
+### 本版明确纠正
 
-O 相对 AC 的主要变化是 single 从 1.688° 改善到 1.521°，但 multi 从 3.105° 退化到 3.243°。因此 **O 不证明“50/50 是最优比例”**。更合理的解释是：
+- 旧流程本来就是 on-the-fly，也没有把来源场景永久分成原图组与混光组。不能把继续复用来源、在线生成或三种状态本身当成新增贡献。
+- O 不是新的空间 alpha 生成器。相对 AC，它的单光源变好、多光源变差，总均值只降低约 0.007563 度；单 seed 结果不证明原图是“必须保留的锚点”，也不证明 50/50 最优。
+- B 必须与 AC 比较。B 的多光源 3.114878 度没有优于 AC 的 3.105397 度。因此不能用 B 对 O 的差距支持“主次光比例已经有效”。exact-q 与 B 并不完全相同，但目前缺乏把它置于最高优先级的直接证据。
+- 强制两状态配对仍然是总体 50/50；同时共享 crop 会再改变一个因素。不能把两者合起来称作只有一个变化。
+- 经过数百个 cycle，随机抽样通常已提供反复的状态覆盖。强制轮换主要改变短期均衡、次序与样本相关性，不必然增加可用信息。
+- AN/PS 均未超过父项 O，不支持把该简单构造作为性能突破；但 AN 与 PS 本身也不是同样差，不能因此概括为“关联完全无效”。ER/EP 与 AN/PS 分别涉及配对关系、来源关联和不同的抽样边缘分布，须按各自匹配对照解释。详见[来源关联结果](nikon_source_association_results.md)。
 
-> **identity/original illumination state 是一个必须稳定保留的真实 anchor；增加 synthetic illumination 不应该以减少 source 在 identity state 下的覆盖为代价。**
+O 仍是当前冻结开发规则选中的配置。历史 test 已查看；本次是公开披露的探索性后续设计，不是全研究过程盲测，也不据此改动既有 test 结果。
 
-当前与 baseline 的 gap 也已经很不对称：
+## 3. 生成器保留的三个状态
 
-- single gap：约 **+0.174°**；
-- multi gap：约 **+0.709°**。
+每个来源场景都允许进入所有状态，不做永久分组，不预先枚举固定几万张成品。每次重光照重新抽取允许的光源和空间场。
 
-因此下一阶段真正要攻的是 synthetic mixed-light branch，而不是继续优化 single-light distribution。
+| 状态 | 输入如何形成 | 监督 |
+|---|---|---|
+| 原始单光源 | 保留原来观测，沿用已有几何和数值预处理 | 原始 Light1 |
+| 人工单光源 | 白平衡底图乘一个随机 train 端点，整图光源色相同 | 新的全局端点白点 |
+| 人工多光源 | 白平衡底图乘空间变化的光源色度图 | 人工生成的逐像素色度图，按旧规则聚合为 patch 标签 |
 
-B 改变每图主导光源比例后，multi=3.115°，优于 O 的 3.243°，但 single 较差。这提示 global dominance 可能值得继续研究；它不是因果证明，但比继续增加随机 alpha 纹理更有针对性。
+“每张来源图都可以生成三类版本”不等于“每次更新必须同时消费三张”。固定训练预算下仍需决定各状态的实际消费次数。源图内容可以复用，但不能同时声称所有状态的曝光次数都增加而计算预算完全不变。
 
-AN/PS 负结果说明简单的 source-image / whole-endpoint-pair association 没有解决当前问题。它不能排除更一般的 endpoint prior，但 **same-scene endpoint pairing 不再作为 P1 主线**。
+白平衡底图 `WB = RAW / Light1` 仍含原始 shading，不是恢复出的光谱反射率。虚拟标签在采用的对角重光照模型下已知，不等于真实光传输已经精确重建。
 
-## 2. 核心策略：Content Bank × Illumination-State Sampler
+## 4. 第一批三个配置
 
-不要把 668 个 source 分成 original 与 mixed 两部分。
+### 4.1 Coverage：只改各场景的状态安排
 
-把每个 source 视为一个可重复使用的 content / reflectance-like base：
+**直接参照：AC 型的计数匹配控制组。** 保留 25% 原图、25% 人工全局、50% 人工混光的总组成，混光仍用 M。
 
-[
-B_i = I_i / L_i.
-]
+对每个场景的相邻两次访问，安排四个视图：第一次“原图 + 混光”，下一次“人工单光源 + 混光”。原图与人工单光源的起始相位在场景之间打散，每对视图的次序可按冻结规则打散，避免状态与固定槽位、cycle 或学习率阶段同步。
 
-然后在训练时 on-the-fly 采样 illumination state：
+两个视图的 crop、resize、flip、patch 抽样仍沿用旧流程，各自独立；不共享 crop，不新增一致性损失。这个实验只研究按来源安排状态，不把“同一个 crop 下的对应关系”混进来。
 
-[
-(B_i,; z) ightarrow (I_{i,z}, E_{i,z}).
-]
+**计数控制必须落实到实际消费：** 正式运行前生成两组完整状态清单，使成功消费的原图/人工全局/混光次数一致，并匹配总视图和有效 patch 数，包含末尾截断。控制组随机分配同一组状态名额，新组约束每个来源的短期覆盖。随机流拆分，新增调度随机数不得意外改变初始化、来源顺序或几何增强。若固定名额控制与历史 AC 不等价，需新增匹配控制组；不能拿历史概率配置当成实际计数完全相同的对照。
 
-同一个 (B_i) 可以经历无限多个状态：
+先查旧代码和日志：若已保证同样的轮换覆盖，则取消这个重复配置。即使改善，也只能先解释为本预算下的调度收益，不预设是根本的信息增益。该配置优先级有限，不作为本轮最主要的性能押注。
 
-[
-B_i ightarrow
-{	ext{identity},	ext{global relit},	ext{weak mixed},	ext{strong mixed},ldots}.
-]
+### 4.2 Intensity-Aligned：只增加与 alpha 绑定的明暗
 
-因此方法框架应从 categorical dataset mixture 改成：
+**直接参照：O 的构造配置，不加载 O 训练权重。** 不改 O 的状态组成、端点、M alpha、几何、patch 位置、GT 或损失。
 
-[
-oxed{	ext{Content Bank} 	imes 	ext{On-the-fly Illumination-State Distribution}}
-]
+仅在人工混光分支使用已准备候选：
 
-668 个场景的 content diversity 固然有限，但 illumination conditional diversity 可以非常大。
+```text
+S_i(x) = 1 - alpha_i(x) / 2
+J_i(x) = WB_i(x) * E_i(x)
+J_aligned_i(x) = J_i(x) * S_i(x)
+```
 
-## 3. 第一优先级实验：每个 source 强制 paired identity + mixed
+其中 `S` 对同一个像素的 RGB 三通道使用相同正数，范围为 0.5 到 1。原图分支不变。保持逐像素光源色度图 `E` 和原 patch 标签规则不变，不把 S 混进色度标签。
 
-当前训练本来就是每 source / cycle 生成两个 view。最干净的下一组实验不增加预算：
+在不裁剪通道、不添加其他非线性且监督定义是色度的条件下，正的中性倍率不改变像素光源色度，因此该标签处理在合成模型内自洽。它并不保持总辐射强度，也不等价于完整真实重光照；原底图已有的 shading 仍然存在。
 
-[
-V_i^{(0)}=	ext{identity}(B_i,L_i)
-]
+这个配置检验“加入这种空间明暗干预是否有用”，不能单独区分一般明暗收益与特定 alpha-明暗关系的收益。
 
-[
-V_i^{(1)}=	ext{synthetic-mixed}(B_i,E_i(x)).
-]
+### 4.3 Intensity-Permuted：相同明暗场，打乱它与当前 alpha 的配对
 
-两个 view：
+**直接参照：O；与 Intensity-Aligned 构成关联对照。** 使用同一组来源、混光场、端点、几何、patch 位置和同一批 S 场，唯一新增差异是 S 分配到哪个混光样本：
 
-- 来自同一个 source；
-- 使用同一 crop / resize / flip / geometry；
-- 一个保留原始 Light1；
-- 一个 on-the-fly 生成 spatial mixed illumination；
-- 各自使用准确 GT；
-- 不新增 consistency loss；
-- 仍为两个 view、每 view 64 patches；
-- optimizer updates 仍固定 69,600。
+```text
+S_i(x) = 1 - alpha_i(x) / 2
+J_permuted_i(x) = J_i(x) * S_perm(i)(x)
+```
 
-这与 O 的区别非常重要。
+`perm` 是事前冻结的无自配对置换，覆盖实际消费的混光视图。不得使用真实混光图、真实标签或模型误差选择置换。使用完整清单或有界缓冲区配对，确保训练期间原图分支不变、不丢视图、不增加更新。
 
-O 是训练分布意义上的 50% original / 50% mixed；paired 方案则保证：
+两组应核对 S 场的整体多重集合、范围、空间统计及消费次数相同，包含末尾截断；保存分配清单和校验值。最终图像的亮度直方图不必相同，因为 S 与底图内容的乘积不同，不能声称保持了每张成品图的所有统计。
 
-[
-oxed{orall; source,quad identity;state;+;mixed;state}
-]
+置换旨在打断逐样本确定性关系，不保证有限样本下所有统计都严格独立。先核验 alpha-S 配对相关性的变化。若随机流与父项无法保持兼容，则增加匹配 O 控制，而不是把数值差异直接归因于 S。
 
-都被覆盖。
+## 5. 训练前必须交付的检查
 
-因此它检验的不是“比例”，而是：
+**数据流与预处理检查：** 记录每个场景进入各状态的次数、两视图关系、实际 patch 消费与初始化哈希。核对黑电平、线性域、mask 及整图/patch z-score 的统计维度。查看完整预处理后的网络输入，确认明暗干预不是仅在保存图上可见、进入网络后却被消去。发现缺陷先记录并修复基线链路，不能把修复悄悄并入新增强后宣称提升。
 
-> **每一个有限 content 是否都应该同时承担真实 identity anchor 与 synthetic illumination expansion。**
+**固定样例检查：** 用允许的 train 单光源图和固定随机种子展示原图、人工单光源、M 混光、绑定 S、置换 S，并同时展示 alpha、E、S。图像只用于实现检查，不按观感筛选训练集或用真实 mixed GT 调生成参数。
 
-如果 paired coverage 优于 O，即可把后续研究正式建立在“source reuse × illumination-state randomization”上。
+**输出验收：** alpha 与 E 的尺寸、正值、有限性；图像和标签的几何一致性；原图恢复一致性；各开关关闭时复现父项路径；单步梯度有限、参数实际更新。以上只是实现正确性检查，不表示性能通过。
 
-## 4. 第二优先级：只改 paired 方案中的 mixed generator
+## 6. 固定预算、开发选择与停止规则
 
-Identity view 保持完全真实，不再反复调整。
+固定原 One-Net、原损失、随机初始化协议、优化器、学习率日程，以及 **69,600 次成功 optimizer updates**。保持对应父项的每步视图数、每图 64 个 patch 和每源两视图；校准不计正式预算，正式运行从冻结随机初始权重重新开始。
 
-研究资源全部投入第二个 synthetic view。
+这是三个新增研究配置，不保证总训练数只有三次：状态对照与父项兼容性不足时，需要额外匹配控制。训练数量、比较关系、状态清单和参数须在正式运行前登记。文档更新不自动授权训练。
 
-### 4.1 Controlled global dominance
+开发继续使用已冻结的真实单光源 val 和四类合成 val、train 端点及原开发分数，不新增按真实混光统计调参的步骤。将原 O 纳入保留候选；新方案优于 AC 不代表自动取代 O。预登记同分优先保留旧 O 的规则。先完成整批训练、开发选择及 checkpoint 登记，再统一真实 val/test 评分，报告所有已运行配置，不能看一组 test 后重设下一组参数。
 
-从 M 的 base field (Z(x)) 出发：
+原 18 格严格验收和追加 seed 条件不变；本次更新不放宽阈值、不将 18 格说成独立统计检验，也不把单 seed 的小差异说成显著改善。
 
-[
-alpha(x)=sigma(	au Z(x)+b_q).
-]
+- Coverage 没有开发收益：停止调度主线，保留旧在线随机方式。不据此否定复用来源内容。
+- 两种 S 都显示开发收益：支持继续研究空间明暗的幅度和尺度；实际真实混光迁移仍需最终评分检验。
+- 只有绑定 S 有开发收益：只支持该特定关联下的观察，不能直接称其真实物理规律。
+- 两种 S 都无收益：停止继续叠加这类亮度增强，不把“亮度一定缺失”当作结论。
 
-先采样目标 image-level dominance：
+exact-q、局部反差、共享 crop、困难 patch 采样、三光源、新 loss 与复杂几何留待后续；本批不一起加入。未来设计仍需遵守禁止真实混光图、GT、混合权重及派生信息进入构造/开发的边界。
 
-[
-q in {0.1,0.3,0.5,0.7,0.9},
-]
+## 7. 当前空间 alpha 到底怎样构建
 
-再求 (b_q)，使：
+**本节说明的是当前 O/AC 的 M 混光分支，不是尚未执行的 exact-q 或新物理生成器。** 根据[第一轮协议](nikon_round1.md)和[第三轮方案](nikon_round3_plan.md)核对；公开仓库以报告和数值摘要为主，本次未独立运行生产训练器。插值边界、坐标约定等工程细节需沿用并核对生产实现，不凭说明补猜。
 
-[
-operatorname{mean}_xalpha(x)=q.
-]
+### 7.1 alpha 是一张比例图，不是 RGB 图，也不是亮度图
 
-这样主光 / 辅光比例成为显式受控变量，而不是随机场的副产品。
+每个像素只有一个数。`alpha=0.8` 表示在统一端点归一化下，该位置按 0.8 倍光源 A 加 0.2 倍光源 B 构造光源色；0.5 表示两端点等权。它不是说“80% 的图像面积受 A 照明”。
 
-B 的结果使这一方向比之前更值得优先验证。
+端点在当前协议中以 G 归一化为 1，因此 alpha 是该相机 RGB 表示下的贡献权重，不直接等于灯具功率、照度比例或光子占比。
 
-### 4.2 Local contrast 与 global dominance 解耦
+### 7.2 先随机两张小网格
 
-固定 q 后再改变：
+独立生成一张 6×6 网格和一张 18×18 网格，每个网格点来自标准正态随机数，可正可负。
 
-[
-	auin{0.5,1,2},
-]
+6×6 的网格负责更大范围的变化，18×18 补充更细的变化。此时它们还不是最终 alpha，不能直接当合法混光比例。
 
-每次重新求 (b_q)。
+### 7.3 把小网格平滑采样到 256×256
 
-这样分别控制：
+使用双线性采样，把两张小网格变成与训练图同尺寸的场，分别记为 C 和 F。相邻位置的值在网格点之间连续过渡，而不是每个像素独立抽随机数。
 
-- q：谁在整幅图中占主导；
-- tau：相同主次关系下，局部 illumination variation 有多强。
+协议还记录坐标平移 ±0.12；精确坐标单位、padding 与边界处理需以当前生产实现为准，不能将文档重写版冒充逐位一致实现。
 
-不要再通过增加更多 random alpha shape 间接改变这两个因素。
+### 7.4 叠加，再压到 0 到 1
 
-### 4.3 Spatial scale 必须显式记录
+```text
+Z(x)     = 0.7 * C(x) + 0.3 * F(x)
+alpha(x) = sigmoid(3 * Z(x))
+sigmoid(v) = 1 / (1 + exp(-v))
+```
 
-对 synthetic view 记录：
+白话说，是大尺度起伏为主、小尺度起伏为辅，再把所有值变成合法的混光比例。乘 3 使相对 0.5 的偏离更明显；这是幅度调节，不是增加新的空间细节。
 
-- patch mean alpha；
-- patch std(alpha)；
-- mean |grad alpha|；
-- illumination correlation scale。
+示例：Z=-1 时 alpha 约 0.047；Z=0 时 alpha=0.5；Z=1 时 alpha 约 0.953。这里 0.7/0.3 是两种空间尺度的权重，不是两盏灯固定的七三比例。
 
-M 的 18×18 fine field 与 One-Net 16×16 patch 已处于相近尺度。若 patch 内 illumination variation 太大，patch-average GT 可能成为较困难的监督接口。
+把最终 alpha 显示成灰度，会是连续变化的明暗斑块：亮的地方偏向光源 A，暗的地方偏向光源 B。这个灰度仅用于显示权重，不表示合成照片那里一定更亮或更暗。
 
-先做诊断，再决定是否把 scale 作为下一训练因素。
+### 7.5 再用比例图合成光源色和输入图
 
-## 5. 第三优先级：GT-aware patch sampling
+```text
+E(x)     = alpha(x) * L_A + (1 - alpha(x)) * L_B
+I_syn(x) = WB(x) * E(x)          # RGB 逐通道相乘
+```
 
-Virtual GT 的一个真正独有优势是：生成器知道哪里是主光区、辅光区和 transition 区。
+L_A/L_B 是允许的 train 全局光源端点，E 是三通道的逐像素光源色度图。E 就是生成器已知的虚拟稠密标签。当前 One-Net 接收的 patch GT，是每个 16×16 区域内 E 向量的算术平均，沿用既有归一化/损失规则；不是把灰度 alpha 直接当 RGB GT。
 
-在 synthetic mixed view 中，可以把 64 patches 拆成：
+因此流程是：**随机两个小网格 → 平滑放大 → 合成合法比例图 alpha → 用两个光源端点得到 E → 同时生成图像和监督。** 下一次生成会重新抽样，不需要储存一个固定合成图集。
 
-- 32 uniform；
-- 32 GT-stratified。
+### 7.6 这个 alpha 知道和不知道什么
 
-例如按 patch mean alpha 分为：
+当前 M 的空间场由随机数和坐标构成，不读取场景语义、深度、法线或真实混光标签来确定哪里该受哪盏灯照明。因此它有空间连续性，但不保证边界和强弱关系符合当前场景的真实照明几何；这一限制不等于已证明它无效。
 
-- A-dominant：<0.2；
-- mixed：0.2–0.8；
-- B-dominant：>0.8。
+O 只改了原图/人工全局/混光的样本组成，没有改这个 M 场。第三轮 B 才在 AC 的混光分支加入整图 bias：`sigmoid(logit(alpha)+b)`，`b~U[-2,2]`。B 与 exact-q 不同，后者会反求 bias，使整图平均 alpha 精确满足指定目标；exact-q 不属于当前 O。
 
-某类不存在时动态重分配，不为了 quota 人工制造区域。
+不能把“整图平均 alpha 接近 0.5”写成“每张图必然一半面积由各光源照亮”。对称随机场的期望与有限实现的分布不同；旧对话中的简化模拟不是生产生成器统计，本版不把它当作已审计的实测依据。
 
-目标不是改变 GT，而是避免小面积 secondary-light 区域因为面积小而几乎不贡献梯度。
+### 7.7 与本批明暗实验的关系
 
-这应该在 paired identity+mixed 和 controlled-q 之后测试，而不是一开始与 generator 混在一起。
+本批 Intensity-Aligned/Permuted **都不改 M 的 alpha 和 E**，只对已合成 RGB 再乘正的中性明暗场 S。因此可以把“混光色度如何分布”和“额外明暗如何分布”拆开研究。若以后研究 alpha 的尺度、主导比例或局部支持，应另设独立对照，不能混进这两组明暗实验。
 
-## 6. 关于空间强度：不要把 chromaticity 与 intensity 混成一个变量
+## 8. 证据与写作边界
 
-仓库准备的候选是在 mixed branch 上：
+本次修订依据仓库已公开的[第一轮协议](nikon_round1.md)、[第二轮协议](nikon_round2_plan.md)、[第三轮方案](nikon_round3_plan.md)、[第三轮结果](nikon_round3_results.md)、[来源关联结果](nikon_source_association_results.md)和 README 当前状态；没有在本次对话重新训练模型，也没有重新完成外部文献系统综述。
 
-[
-I'(x)=I(x),[1-alpha(x)/2]
-]
-
-而 illuminant chromaticity label 不变。
-
-如果这个乘子是对 RGB 三通道相同的 scalar，它本身不会改变 chromaticity GT；可以解释为一个与 alpha 相关的总照度 / shading field。因此它不必然构成 label inconsistency。
-
-但它把 intensity 与 alpha 强绑定：
-
-[
-S(x)=1-alpha(x)/2.
-]
-
-这样如果实验有效，很难知道收益来自“真实场景确实存在强度变化”，还是来自这一特定负相关。
-
-更合理的长期形式是 factorize：
-
-[
-E_c(x)=alpha(x)L_1+[1-alpha(x)]L_2
-]
-
-[
-I_{m syn}(x)=B(x),S(x),E_c(x),
-]
-
-其中：
-
-- (E_c(x))：chromaticity field，作为 virtual GT；
-- (S(x)>0)：独立 scalar intensity / shading field，不进入 chromaticity GT。
-
-先比较 (S=1) 与一个独立低频 (S(x))，再研究 (S) 与 alpha 的相关性。
-
-## 7. 暂时降级的方向
-
-### Same-scene endpoint pairing
-
-AN/PS 已经说明简单的 source / whole-pair association 没有带来改善。它不能彻底否定 endpoint joint prior，但当前不值得占用主实验预算。
-
-### 更多随机 alpha shape
-
-M 已证明 spatial variation 有用，但 P、S 等结果没有支持“越复杂越好”。下一阶段优先控制 distribution，而不是继续增加 texture family。
-
-### 三光源
-
-LSMI 有三光源场景，但当前 two-light synthetic branch 还比真实 baseline multi 高约 0.7°。在 two-light 的 contribution field、intensity 与 sampling 尚未厘清前，直接加入三光源会同时增加多个自由度，暂列后续。
-
-### 新 consistency loss
-
-paired same-content views 天然允许 consistency/equivariance，但第一轮不要加。两个 view 已有准确 GT，应先证明 **paired virtual supervision 本身**有效，避免把贡献变成 loss engineering。
-
-## 8. 最小实验矩阵
-
-固定 One-Net、初始化协议、69,600 optimizer updates、两个 views/source/cycle、每 view 64 patches。
-
-| 实验 | View 1 | View 2 | 唯一主要变化 |
-|---|---|---|---|
-| O | stochastic original/mixed | stochastic original/mixed | 当前 parent |
-| Pair-M | identity | M mixed | 每个 source 强制双状态覆盖，共享 geometry |
-| Pair-Q | identity | controlled-q mixed | 显式控制 global dominance |
-| Pair-QT | identity | controlled q + tau | 再解耦 local contrast |
-| Pair-QT-Samp | identity | QT + GT-aware sampling | 检验 minority/transition patch coverage |
-
-如果预算更紧，只跑前三个：**Pair-M → Pair-Q → Pair-QT**。
-
-每一步都同时报告 single / multi。主目标是：
-
-- single 不丢掉 O 已恢复的能力；
-- multi 从 O 的 3.2426° 明显向 baseline 2.5338° 靠近。
-
-## 9. 决策规则
-
-### 如果 Pair-M > O
-
-说明 O 的收益不只是“每个 source 同时看到两个状态”；随机 illumination-state sampling 可能本身更适合当前优化。停止把 paired coverage 当主线，回到 mixed generator distribution。
-
-### 如果 Pair-M < O，且 single 不退化
-
-说明“每个 content 都覆盖 identity + mixed”是有效结构。后续所有 generator 实验都以 paired protocol 为 parent。
-
-### 如果 Pair-Q 主要改善 multi
-
-继续研究 q / tau / scale / sampling，这是最理想的信号。
-
-### 如果 Pair-Q / QT 都无法明显改善 multi
-
-不要继续堆 alpha 参数。优先转向：
-
-1. intensity / contribution-field factorization；
-2. linear-domain / black-level / normalization audit；
-3. synthetic-vs-real mixed-light statistics；
-4. 再决定是否需要 geometry/content-aware illumination support。
-
-## 10. 最终方法论定位
-
-我现在最推荐的主线不是：
-
-> 50% original + 50% synthetic。
-
-而是：
-
-[
-oxed{
-	ext{有限 Content Bank}
-	imes
-	ext{无限 On-the-fly Illumination States}
-}
-]
-
-其中每个 source 的真实 identity state 被稳定保留，synthetic branch 负责扩展真实数据难以覆盖的 illumination space。
-
-Virtual GT 想超过真实 mixed-light supervision，应该利用的不是“合成图片更多”这个粗粒度优势，而是：
-
-[
-oxed{
-	ext{content reuse}
-+
-	ext{exact supervision}
-+
-	ext{controllable illumination coverage}
-+
-	ext{targeted sampling}
-}
-]
-
-这也是目前我认为最值得用固定 One-Net 验证的下一阶段策略。
-
-## 11. 相关工作边界
-
-LSMI 已展示 pixel-level relighting augmentation 能提升 multi-illuminant white balance，并提供 illuminant chromaticity、pixel-wise mixture ratio 与 dense GT。后续 pixel-wise color constancy 工作也强调 illumination map 的空间连续性。
-
-因此不要把“同一 scene 做 relighting augmentation”本身作为 novelty。
-
-更值得争取的贡献是：
-
-> **在不使用真实 mixed image / mixture map / dense GT 构造训练监督的前提下，把单光源 content bank 与 illumination-state distribution 解耦，并系统证明受控 virtual dense supervision 如何在固定模型和固定训练预算下缩小乃至超过真实 multi-light supervision。**
-
-重点参考仍包括 LSMI (ICCV 2021)、One-Net multi-illuminant extension、Dual-Illumination Weighting and Estimation、PWCC (ICIP 2024) 及 illumination decomposition / multi-scale pixel-wise estimation 工作。正式论文写作前应逐篇核验 novelty 与实验协议。
+本文是 ChatGPT 的建议和对先前说法的修正，不是 Codex 已完成的实验结论，不替代执行侧冻结协议与校准验收。历史版本保留在 Git 提交记录中；历史结果表和验收文件不作修改。正式论文的新颖性判断仍须回到可核验原论文，不能把在线重光照、内容复用或成对增强本身直接宣称为首次提出。
