@@ -1,0 +1,259 @@
+{
+  "updated": "2026-09-25",
+  "agent": "codex",
+  "status": "complete_performance_target_not_met",
+  "independent_review": {
+    "artifact_verdict_against_performance_contract": "FAIL",
+    "contract_verdict": "ADEQUATE",
+    "evidence_level": "S1 traceable failed experiment",
+    "scoring_fixtures_passed": 2,
+    "sampled_pixel_checks": 12,
+    "isolation": "limited: shared filesystem and same model family",
+    "limits": "No retraining or full network prediction rerun; not all original patch GT rechecked."
+  },
+  "dataset": "LSMI Nikon",
+  "seed": 0,
+  "new_model_optimizer_updates": 69600,
+  "baseline_retrained_this_round": false,
+  "units": "mean angular error in degrees; lower is better",
+  "metric_cells": 18,
+  "aggregation": "float64 reaggregation of saved float32 patch errors; equal-image pixel means",
+  "support": {
+    "val/all": {
+      "images": 394,
+      "patches": 100864
+    },
+    "val/single": {
+      "images": 190,
+      "patches": 48640
+    },
+    "val/multi": {
+      "images": 204,
+      "patches": 52224
+    },
+    "test/all": {
+      "images": 204,
+      "patches": 52224
+    },
+    "test/single": {
+      "images": 97,
+      "patches": 24832
+    },
+    "test/multi": {
+      "images": 107,
+      "patches": 27392
+    }
+  },
+  "frozen_winner": "AC",
+  "selection_basis": "frozen development score; recorded before real mixed GT evaluation",
+  "development_scores": {
+    "M": 1,
+    "C": 1.0006928286291843,
+    "A": 0.8938015881703592,
+    "AC": 0.886318312117047,
+    "L": 0.8903640166183852,
+    "S": 0.9798569827431166
+  },
+  "selection_time": "2026-09-25T13:21:49+08:00",
+  "completion_record_time": "2026-09-25T13:24:29+08:00",
+  "winner_passes_seed0_gate": false,
+  "multi_seed_goal_complete": false,
+  "evaluation_manifest_sha256": "08f27579e27e308b90074beff98747aa24307cc6bae1fe2b990b486c353013be",
+  "selection_sha256": "f8d3658b04bbdb10796e4b412f0f8f98c6174af91adb2a9a212cde71ef8f5734",
+  "code_hashes": {
+    "round2.py": "cf33578d9e8f54b390174fefae065cbf346e075ce626ec5f55fbd255245c55d8",
+    "train_single_source.py": "c08c44278e21b32d31901d172236cac2aaf82e0cb8982937b509287fef326c61",
+    "evaluate_frozen.py": "d465a13a2fad6d27e1004b852073fd5dbc798e43e81ed6f042b4abda740fb608",
+    "domislovic_v2.py": "6eb3fbc37fadcebbdcc2b7565ca8ba215f075021abcee900bfeb28c279cc52a9"
+  },
+  "checkpoint_hashes": {
+    "baseline": "94d1cbf18b550156d46b6a201f87cc5d05619ab7e73c19983d7785bd382d39bb",
+    "M": "078aea9d04bc045ec984edbc5cc2992767adb3255b365fcb580ddeeef6aa80f3",
+    "C": "73034ea5611c2dff5a88cbb21866711eaa747dbdd4eb233a877e628abc8e5664",
+    "A": "89829a34e812e4249b7729d262a72f5ee74bcee4f9f7cb5d4f780ca85f8e5caa",
+    "AC": "6ec3ba1e25a822731f893ff206275d770aba4017360621d658f4365cff4f5cc5",
+    "L": "01e1ba415f5da5514c3f37e4f493212eb5b55b081c17a707782658486a2c99d4",
+    "S": "fb50fc5f64337935c1c1c39e57568f45e74535d670479a27111829794e9e29d4"
+  },
+  "metrics": {
+    "baseline": {
+      "val/all/patch_pooled": 1.7944247106351383,
+      "val/all/patch_image_balanced": 1.7944247106351383,
+      "val/all/pixel_image_balanced": 2.0405344519578694,
+      "val/single/patch_pooled": 1.240101148980083,
+      "val/single/patch_image_balanced": 1.240101148980083,
+      "val/single/pixel_image_balanced": 1.2401455894147886,
+      "val/multi/patch_pooled": 2.310706459235435,
+      "val/multi/patch_image_balanced": 2.310706459235435,
+      "val/multi/pixel_image_balanced": 2.785994667071524,
+      "test/all/patch_pooled": 1.9692417243970304,
+      "test/all/patch_image_balanced": 1.9692417243970304,
+      "test/all/pixel_image_balanced": 2.1671289093194748,
+      "test/single/patch_pooled": 1.3465057009695753,
+      "test/single/patch_image_balanced": 1.3465057009695753,
+      "test/single/pixel_image_balanced": 1.3465772262103686,
+      "test/multi/patch_pooled": 2.5337781194667794,
+      "test/multi/patch_image_balanced": 2.5337781194667794,
+      "test/multi/pixel_image_balanced": 2.9109935192408134
+    },
+    "M": {
+      "val/all/patch_pooled": 2.611051363258398,
+      "val/all/patch_image_balanced": 2.611051363258398,
+      "val/all/pixel_image_balanced": 2.7395027353556176,
+      "val/single/patch_pooled": 2.04199063687874,
+      "val/single/patch_image_balanced": 2.04199063687874,
+      "val/single/pixel_image_balanced": 2.042010138012266,
+      "val/multi/patch_pooled": 3.141058902533569,
+      "val/multi/patch_image_balanced": 3.141058902533569,
+      "val/multi/pixel_image_balanced": 3.3891281936656026,
+      "test/all/patch_pooled": 2.725795129621831,
+      "test/all/patch_image_balanced": 2.725795129621831,
+      "test/all/pixel_image_balanced": 2.824945043392804,
+      "test/single/patch_pooled": 2.002994181276401,
+      "test/single/patch_image_balanced": 2.002994181276401,
+      "test/single/pixel_image_balanced": 2.0030583325546725,
+      "test/multi/patch_pooled": 3.3810445874676875,
+      "test/multi/patch_image_balanced": 3.3810445874676875,
+      "test/multi/pixel_image_balanced": 3.570019912096532
+    },
+    "C": {
+      "val/all/patch_pooled": 2.5833731458951106,
+      "val/all/patch_image_balanced": 2.5833731458951106,
+      "val/all/pixel_image_balanced": 2.719564916519135,
+      "val/single/patch_pooled": 2.0448665641288817,
+      "val/single/patch_image_balanced": 2.0448665641288817,
+      "val/single/pixel_image_balanced": 2.0448876518418455,
+      "val/multi/patch_pooled": 3.084923393618559,
+      "val/multi/patch_image_balanced": 3.084923393618559,
+      "val/multi/pixel_image_balanced": 3.3479408002871986,
+      "test/all/patch_pooled": 2.741880906912675,
+      "test/all/patch_image_balanced": 2.741880906912675,
+      "test/all/pixel_image_balanced": 2.8376247030064947,
+      "test/single/patch_pooled": 2.032878510048568,
+      "test/single/patch_image_balanced": 2.032878510048568,
+      "test/single/pixel_image_balanced": 2.032933905943278,
+      "test/multi/patch_pooled": 3.3846213975277997,
+      "test/multi/patch_image_balanced": 3.3846213975277997,
+      "test/multi/pixel_image_balanced": 3.5671107526806254
+    },
+    "A": {
+      "val/all/patch_pooled": 2.273765575823473,
+      "val/all/patch_image_balanced": 2.273765575823473,
+      "val/all/pixel_image_balanced": 2.4213319120057126,
+      "val/single/patch_pooled": 1.5059904330874192,
+      "val/single/patch_image_balanced": 1.5059904330874192,
+      "val/single/pixel_image_balanced": 1.5060197640110347,
+      "val/multi/patch_pooled": 2.988850267587444,
+      "val/multi/patch_image_balanced": 2.988850267587444,
+      "val/multi/pixel_image_balanced": 3.273828520432129,
+      "test/all/patch_pooled": 2.4506647252436617,
+      "test/all/patch_image_balanced": 2.4506647252436617,
+      "test/all/pixel_image_balanced": 2.5658985048123033,
+      "test/single/patch_pooled": 1.6399851073517695,
+      "test/single/patch_image_balanced": 1.6399851073517695,
+      "test/single/pixel_image_balanced": 1.6400563306354996,
+      "test/multi/patch_pooled": 3.1855798928652836,
+      "test/multi/patch_image_balanced": 3.1855798928652836,
+      "test/multi/pixel_image_balanced": 3.405213372991275
+    },
+    "AC": {
+      "val/all/patch_pooled": 2.2422054839152397,
+      "val/all/patch_image_balanced": 2.2422054839152397,
+      "val/all/pixel_image_balanced": 2.389354494686409,
+      "val/single/patch_pooled": 1.5012318410438494,
+      "val/single/patch_image_balanced": 1.5012318410438494,
+      "val/single/pixel_image_balanced": 1.5012736715715018,
+      "val/multi/patch_pooled": 2.9323279944327107,
+      "val/multi/patch_image_balanced": 2.9323279944327107,
+      "val/multi/pixel_image_balanced": 3.2164885946463726,
+      "test/all/patch_pooled": 2.4314203892213033,
+      "test/all/patch_image_balanced": 2.4314203892213033,
+      "test/all/pixel_image_balanced": 2.552636154059058,
+      "test/single/patch_pooled": 1.687961437049416,
+      "test/single/patch_image_balanced": 1.687961437049416,
+      "test/single/pixel_image_balanced": 1.6880239079964545,
+      "test/multi/patch_pooled": 3.1053971963303972,
+      "test/multi/patch_image_balanced": 3.1053971963303972,
+      "test/multi/pixel_image_balanced": 3.336443517312072
+    },
+    "L": {
+      "val/all/patch_pooled": 2.244009607250717,
+      "val/all/patch_image_balanced": 2.244009607250717,
+      "val/all/pixel_image_balanced": 2.3913392294112357,
+      "val/single/patch_pooled": 1.5065089649199142,
+      "val/single/patch_image_balanced": 1.5065089649199142,
+      "val/single/pixel_image_balanced": 1.5065394000774925,
+      "val/multi/patch_pooled": 2.930897460401955,
+      "val/multi/patch_image_balanced": 2.930897460401955,
+      "val/multi/pixel_image_balanced": 3.215417501829918,
+      "test/all/patch_pooled": 2.4503865064872277,
+      "test/all/patch_image_balanced": 2.4503865064872277,
+      "test/all/pixel_image_balanced": 2.569747055281051,
+      "test/single/patch_pooled": 1.6807321438980805,
+      "test/single/patch_image_balanced": 1.6807321438980805,
+      "test/single/pixel_image_balanced": 1.6807865631032612,
+      "test/multi/patch_pooled": 3.1481105548157067,
+      "test/multi/patch_image_balanced": 3.1481105548157067,
+      "test/multi/pixel_image_balanced": 3.3756271276291407
+    },
+    "S": {
+      "val/all/patch_pooled": 2.293448532615501,
+      "val/all/patch_image_balanced": 2.293448532615501,
+      "val/all/pixel_image_balanced": 2.4325450113473615,
+      "val/single/patch_pooled": 1.5408528489633968,
+      "val/single/patch_image_balanced": 1.5408528489633968,
+      "val/single/pixel_image_balanced": 1.5409081994967389,
+      "val/multi/patch_pooled": 2.9943954928797156,
+      "val/multi/patch_image_balanced": 2.9943954928797156,
+      "val/multi/pixel_image_balanced": 3.262991061600392,
+      "test/all/patch_pooled": 2.7467558295293735,
+      "test/all/patch_image_balanced": 2.7467558295293735,
+      "test/all/pixel_image_balanced": 2.86273315129614,
+      "test/single/patch_pooled": 1.9179708158785476,
+      "test/single/patch_image_balanced": 1.9179708158785476,
+      "test/single/pixel_image_balanced": 1.9180241889919694,
+      "test/multi/patch_pooled": 3.498084299848347,
+      "test/multi/patch_image_balanced": 3.498084299848347,
+      "test/multi/pixel_image_balanced": 3.7191515563756217
+    }
+  },
+  "comparisons": {
+    "M": {
+      "passed_cells": 0,
+      "total_cells": 18,
+      "all_means_strictly_lower": false
+    },
+    "C": {
+      "passed_cells": 0,
+      "total_cells": 18,
+      "all_means_strictly_lower": false
+    },
+    "A": {
+      "passed_cells": 0,
+      "total_cells": 18,
+      "all_means_strictly_lower": false
+    },
+    "AC": {
+      "passed_cells": 0,
+      "total_cells": 18,
+      "all_means_strictly_lower": false
+    },
+    "L": {
+      "passed_cells": 0,
+      "total_cells": 18,
+      "all_means_strictly_lower": false
+    },
+    "S": {
+      "passed_cells": 0,
+      "total_cells": 18,
+      "all_means_strictly_lower": false
+    }
+  },
+  "acceptance_rule": "Development-selected seed0 must be strictly lower than the fixed historical seed0 baseline in all 18 cells, then freeze the configuration and run seeds1/2. The arithmetic mean across all three seeds must also pass all 18 cells; disclose every per-seed cell.",
+  "limitations": [
+    "Exploratory iteration: historical test results have been viewed, not a new blind test.",
+    "Historical baseline used real mixed-light training sources; this is not a strict single-factor causal ablation.",
+    "Real mixed images, dense GT, mixture maps and their derived information are forbidden for candidate construction, training and development selection. All train global Light1/2/3 endpoint colors are allowed.",
+    "Hashes identify private artifacts; data, weights and a runnable implementation are not distributed in this documentation-only snapshot."
+  ]
+}
