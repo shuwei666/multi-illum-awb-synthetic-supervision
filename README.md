@@ -86,6 +86,7 @@ M 是四个合成训练模型中的最好结果，仍比 baseline 高 0.75655°�
 
 ## 文档与证据
 
+- [GPT-5.6 Sol：下一阶段 Virtual GT 研究意见](docs/next_virtual_gt_research_plan.md)
 - [Nikon 第一轮：协议、完整结果与限制](docs/nikon_round1.md)
 - [第二轮：历史冻结方案与完成状态](docs/nikon_round2_plan.md)
 - [第二轮：全部结果、冻结选择与限制](docs/nikon_round2_results.md)
