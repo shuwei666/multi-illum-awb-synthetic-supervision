@@ -1,0 +1,78 @@
+{
+  "updated": "2026-09-25",
+  "agent": "codex",
+  "status": "complete_performance_target_not_met",
+  "dataset": "LSMI Nikon",
+  "split": "official test",
+  "seed": 0,
+  "new_model_optimizer_updates": 69600,
+  "n_images": 204,
+  "n_valid_patches": 52224,
+  "units": "degrees; lower is better",
+  "pixel_metric_definition": "image-balanced mean angular error after block-broadcasting patch predictions to dense ground-truth size",
+  "baseline_retrained_this_round": false,
+  "historical_baseline_patch_mean": 1.96915268898,
+  "exploratory_close_threshold": 2.0692,
+  "backbone_sha256": "6eb3fbc37fadcebbdcc2b7565ca8ba215f075021abcee900bfeb28c279cc52a9",
+  "evaluator_sha256": "d465a13a2fad6d27e1004b852073fd5dbc798e43e81ed6f042b4abda740fb608",
+  "test_image_ids_sha256": "105f7eb655c15d3872a3b306d883689fd60bf15c352b386452ed67344f220af2",
+  "val_image_ids_sha256": "4128676152ef31a2bf9c4fda8a54078819b27035406a2314f20c654783606e25",
+  "models": [
+    {
+      "model": "baseline",
+      "checkpoint_sha256": "94d1cbf18b550156d46b6a201f87cc5d05619ab7e73c19983d7785bd382d39bb",
+      "patch_pooled_mean": 1.969241738319397,
+      "patch_single_mean": 1.3465056419372559,
+      "patch_multi_mean": 2.533777952194214,
+      "patch_worst25": 4.711512565612793,
+      "pixel_image_balanced_mean": 2.1671289093194748,
+      "source_load_plus_total_after_load_sec": null
+    },
+    {
+      "model": "G",
+      "checkpoint_sha256": "dd0c922be8d4777caaebd8bd62e59ded7318d90b3198d4c8476b2309c4c8eb8e",
+      "patch_pooled_mean": 2.9813098907470703,
+      "patch_single_mean": 1.92581045627594,
+      "patch_multi_mean": 3.9381637573242188,
+      "patch_worst25": 7.577349662780762,
+      "pixel_image_balanced_mean": 3.0646044431757615,
+      "source_load_plus_total_after_load_sec": 688.049
+    },
+    {
+      "model": "R",
+      "checkpoint_sha256": "75b62af4ae08073141d74d826adcecb99e567c8f443b3e4738dbb819f3947182",
+      "patch_pooled_mean": 2.873204469680786,
+      "patch_single_mean": 2.168799877166748,
+      "patch_multi_mean": 3.5117762088775635,
+      "patch_worst25": 6.918529033660889,
+      "pixel_image_balanced_mean": 2.9731078634655845,
+      "source_load_plus_total_after_load_sec": 721.542
+    },
+    {
+      "model": "M",
+      "checkpoint_sha256": "078aea9d04bc045ec984edbc5cc2992767adb3255b365fcb580ddeeef6aa80f3",
+      "patch_pooled_mean": 2.725795269012451,
+      "patch_single_mean": 2.0029940605163574,
+      "patch_multi_mean": 3.381044626235962,
+      "patch_worst25": 6.647421836853027,
+      "pixel_image_balanced_mean": 2.824945043392804,
+      "source_load_plus_total_after_load_sec": 695.797
+    },
+    {
+      "model": "P",
+      "checkpoint_sha256": "d8b75679d2092c1796d7f38c108925b413bc21ebdd65abe4ca9211736b37e0d6",
+      "patch_pooled_mean": 2.7646350860595703,
+      "patch_single_mean": 2.014650344848633,
+      "patch_multi_mean": 3.4445273876190186,
+      "patch_worst25": 6.7181925773620605,
+      "pixel_image_balanced_mean": 2.860190838658306,
+      "source_load_plus_total_after_load_sec": 699.243
+    }
+  ],
+  "limitations": [
+    "Single seed exploratory results; test has been viewed.",
+    "Historical baseline uses real mixed-light training sources; not a strict single-factor causal ablation.",
+    "Initial-weight files were not archived for round one.",
+    "Documentation-only public release; source data and model weights are not distributed."
+  ]
+}
