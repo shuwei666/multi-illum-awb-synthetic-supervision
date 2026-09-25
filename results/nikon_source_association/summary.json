@@ -1,0 +1,380 @@
+{
+  "schema_version": 1,
+  "updated": "2026-09-25",
+  "agent": "codex",
+  "status": "completed_negative_experiment",
+  "publication_scope": "documentation_and_compact_numeric_summary_only",
+  "verdict": {
+    "result_correctness": "PASS",
+    "performance": "FAIL",
+    "contract": "ADEQUATE",
+    "maturity": "S1",
+    "performance_success": false
+  },
+  "data_boundary": {
+    "training_source_images": 668,
+    "training_source_kind": "official Nikon train single-light _1.tiff and Light1",
+    "allowed_global_endpoint_colors": 1353,
+    "endpoint_scope": "all valid train Light1/2/3, including multi-light scenes",
+    "forbidden_for_construction_training_development_tuning": [
+      "real mixed images",
+      "real dense GT",
+      "mixture fields",
+      "GT-derived statistics",
+      "mixed-trained teachers or initialization"
+    ],
+    "development": "frozen 190 official val single-light RAW/Light1 plus four synthetic modes",
+    "real_GT_use": "frozen final scoring only; historical test exposure disclosed"
+  },
+  "training": {
+    "seed": 0,
+    "new_arms": [
+      "AN",
+      "PS"
+    ],
+    "successful_updates_per_arm": 69600,
+    "cycles_per_arm": 417,
+    "full_cycles": 416,
+    "updates_per_full_cycle": 167,
+    "tail_updates": 128,
+    "parameter_count": 42179,
+    "initialization": "same frozen random seed0; neither parent nor calibration weights",
+    "seed1_or_seed2_training_performed": false
+  },
+  "selection": {
+    "winner": "parent",
+    "parent_original_name": "O",
+    "basis": "frozen single-source dev only; strict minimum; parent,AN,PS tie order",
+    "scores": {
+      "parent": 0.8573986570311704,
+      "AN": 0.9591593394368222,
+      "PS": 0.8983241283876301
+    },
+    "selected_at_unix_seconds": 1790324333.5195465,
+    "parent_checkpoint_reused": true,
+    "no_posthoc_winner_replacement": true
+  },
+  "acceptance": {
+    "cells_per_model": 18,
+    "mean_values_total": 72,
+    "candidate_deltas_total": 54,
+    "criterion": "every unrounded candidate mean strictly below the corresponding fixed original seed0 baseline mean",
+    "winner_passes_seed0_gate": false,
+    "multi_seed_goal_complete": false,
+    "metric_cells_are_independent_statistical_tests": false
+  },
+  "metrics_degrees": {
+    "baseline": {
+      "val/all/patch_pooled": 1.7944247106351383,
+      "val/all/patch_image_balanced": 1.7944247106351383,
+      "val/all/pixel_image_balanced": 2.0405344519578694,
+      "val/single/patch_pooled": 1.240101148980083,
+      "val/single/patch_image_balanced": 1.240101148980083,
+      "val/single/pixel_image_balanced": 1.2401455894147886,
+      "val/multi/patch_pooled": 2.310706459235435,
+      "val/multi/patch_image_balanced": 2.310706459235435,
+      "val/multi/pixel_image_balanced": 2.785994667071524,
+      "test/all/patch_pooled": 1.9692417243970304,
+      "test/all/patch_image_balanced": 1.9692417243970304,
+      "test/all/pixel_image_balanced": 2.1671289093194748,
+      "test/single/patch_pooled": 1.3465057009695753,
+      "test/single/patch_image_balanced": 1.3465057009695753,
+      "test/single/pixel_image_balanced": 1.3465772262103686,
+      "test/multi/patch_pooled": 2.5337781194667794,
+      "test/multi/patch_image_balanced": 2.5337781194667794,
+      "test/multi/pixel_image_balanced": 2.9109935192408134
+    },
+    "parent": {
+      "val/all/patch_pooled": 2.164356416630464,
+      "val/all/patch_image_balanced": 2.164356416630464,
+      "val/all/pixel_image_balanced": 2.30675834694191,
+      "val/single/patch_pooled": 1.2603419357118821,
+      "val/single/patch_image_balanced": 1.2603419357118821,
+      "val/single/pixel_image_balanced": 1.2603825585365738,
+      "val/multi/patch_pooled": 3.0063306880742413,
+      "val/multi/patch_image_balanced": 3.0063306880742413,
+      "val/multi/pixel_image_balanced": 3.281324032221391,
+      "test/all/patch_pooled": 2.4238576383274504,
+      "test/all/patch_image_balanced": 2.4238576383274504,
+      "test/all/pixel_image_balanced": 2.5378864060742408,
+      "test/single/patch_pooled": 1.5207020019352995,
+      "test/single/patch_image_balanced": 1.5207020019352995,
+      "test/single/pixel_image_balanced": 1.5207788399969573,
+      "test/multi/patch_pooled": 3.2426062058979044,
+      "test/multi/patch_image_balanced": 3.2426062058979044,
+      "test/multi/pixel_image_balanced": 3.4599371902751415
+    },
+    "AN": {
+      "val/all/patch_pooled": 2.2124953686085287,
+      "val/all/patch_image_balanced": 2.2124953686085287,
+      "val/all/pixel_image_balanced": 2.330824889480831,
+      "val/single/patch_pooled": 1.1873382388664666,
+      "val/single/patch_image_balanced": 1.1873382388664666,
+      "val/single/pixel_image_balanced": 1.1873957793970247,
+      "val/multi/patch_pooled": 3.1672985776820175,
+      "val/multi/patch_image_balanced": 3.1672985776820175,
+      "val/multi/pixel_image_balanced": 3.3957833743628076,
+      "test/all/patch_pooled": 2.562605393531568,
+      "test/all/patch_image_balanced": 2.562605393531568,
+      "test/all/pixel_image_balanced": 2.662583638477503,
+      "test/single/patch_pooled": 1.504422733457141,
+      "test/single/patch_image_balanced": 1.504422733457141,
+      "test/single/pixel_image_balanced": 1.5045149418152834,
+      "test/multi/patch_pooled": 3.521892477898104,
+      "test/multi/patch_image_balanced": 3.521892477898104,
+      "test/multi/pixel_image_balanced": 3.712421615825497
+    },
+    "PS": {
+      "val/all/patch_pooled": 2.2575915844258656,
+      "val/all/patch_image_balanced": 2.2575915844258656,
+      "val/all/pixel_image_balanced": 2.3800775064705046,
+      "val/single/patch_pooled": 1.2300967203068707,
+      "val/single/patch_image_balanced": 1.2300967203068707,
+      "val/single/pixel_image_balanced": 1.2301544364771946,
+      "val/multi/patch_pooled": 3.2145720951249293,
+      "val/multi/patch_image_balanced": 3.2145720951249293,
+      "val/multi/pixel_image_balanced": 3.4510842873466268,
+      "test/all/patch_pooled": 2.70852352174288,
+      "test/all/patch_image_balanced": 2.70852352174288,
+      "test/all/pixel_image_balanced": 2.8080533332663125,
+      "test/single/patch_pooled": 1.6700418966144388,
+      "test/single/patch_image_balanced": 1.6700418966144388,
+      "test/single/pixel_image_balanced": 1.6700954087492976,
+      "test/multi/patch_pooled": 3.649950789382682,
+      "test/multi/patch_image_balanced": 3.649950789382682,
+      "test/multi/pixel_image_balanced": 3.839660049884541
+    }
+  },
+  "comparisons_against_original_baseline": {
+    "parent": {
+      "passed_cells": 0,
+      "total_cells": 18,
+      "all_means_strictly_lower": false,
+      "delta_degrees": {
+        "val/all/patch_pooled": 0.36993170599532577,
+        "val/all/patch_image_balanced": 0.36993170599532577,
+        "val/all/pixel_image_balanced": 0.26622389498404075,
+        "val/single/patch_pooled": 0.020240786731799076,
+        "val/single/patch_image_balanced": 0.020240786731799076,
+        "val/single/pixel_image_balanced": 0.020236969121785187,
+        "val/multi/patch_pooled": 0.6956242288388061,
+        "val/multi/patch_image_balanced": 0.6956242288388061,
+        "val/multi/pixel_image_balanced": 0.49532936514986714,
+        "test/all/patch_pooled": 0.45461591393042,
+        "test/all/patch_image_balanced": 0.45461591393042,
+        "test/all/pixel_image_balanced": 0.370757496754766,
+        "test/single/patch_pooled": 0.17419630096572414,
+        "test/single/patch_image_balanced": 0.17419630096572414,
+        "test/single/pixel_image_balanced": 0.17420161378658872,
+        "test/multi/patch_pooled": 0.7088280864311249,
+        "test/multi/patch_image_balanced": 0.7088280864311249,
+        "test/multi/pixel_image_balanced": 0.5489436710343281
+      }
+    },
+    "AN": {
+      "passed_cells": 3,
+      "total_cells": 18,
+      "all_means_strictly_lower": false,
+      "delta_degrees": {
+        "val/all/patch_pooled": 0.4180706579733904,
+        "val/all/patch_image_balanced": 0.4180706579733904,
+        "val/all/pixel_image_balanced": 0.2902904375229616,
+        "val/single/patch_pooled": -0.052762910113616446,
+        "val/single/patch_image_balanced": -0.052762910113616446,
+        "val/single/pixel_image_balanced": -0.05274981001776391,
+        "val/multi/patch_pooled": 0.8565921184465823,
+        "val/multi/patch_image_balanced": 0.8565921184465823,
+        "val/multi/pixel_image_balanced": 0.6097887072912838,
+        "test/all/patch_pooled": 0.5933636691345374,
+        "test/all/patch_image_balanced": 0.5933636691345374,
+        "test/all/pixel_image_balanced": 0.49545472915802824,
+        "test/single/patch_pooled": 0.1579170324875656,
+        "test/single/patch_image_balanced": 0.1579170324875656,
+        "test/single/pixel_image_balanced": 0.15793771560491487,
+        "test/multi/patch_pooled": 0.9881143584313246,
+        "test/multi/patch_image_balanced": 0.9881143584313246,
+        "test/multi/pixel_image_balanced": 0.8014280965846834
+      }
+    },
+    "PS": {
+      "passed_cells": 3,
+      "total_cells": 18,
+      "all_means_strictly_lower": false,
+      "delta_degrees": {
+        "val/all/patch_pooled": 0.4631668737907273,
+        "val/all/patch_image_balanced": 0.4631668737907273,
+        "val/all/pixel_image_balanced": 0.3395430545126352,
+        "val/single/patch_pooled": -0.010004428673212384,
+        "val/single/patch_image_balanced": -0.010004428673212384,
+        "val/single/pixel_image_balanced": -0.009991152937594006,
+        "val/multi/patch_pooled": 0.9038656358894941,
+        "val/multi/patch_image_balanced": 0.9038656358894941,
+        "val/multi/pixel_image_balanced": 0.6650896202751029,
+        "test/all/patch_pooled": 0.7392817973458496,
+        "test/all/patch_image_balanced": 0.7392817973458496,
+        "test/all/pixel_image_balanced": 0.6409244239468377,
+        "test/single/patch_pooled": 0.32353619564486347,
+        "test/single/patch_image_balanced": 0.32353619564486347,
+        "test/single/pixel_image_balanced": 0.32351818253892906,
+        "test/multi/patch_pooled": 1.1161726699159025,
+        "test/multi/patch_image_balanced": 1.1161726699159025,
+        "test/multi/pixel_image_balanced": 0.9286665306437274
+      }
+    }
+  },
+  "support": {
+    "val/all": {
+      "images": 394,
+      "patches": 100864
+    },
+    "val/single": {
+      "images": 190,
+      "patches": 48640
+    },
+    "val/multi": {
+      "images": 204,
+      "patches": 52224
+    },
+    "test/all": {
+      "images": 204,
+      "patches": 52224
+    },
+    "test/single": {
+      "images": 97,
+      "patches": 24832
+    },
+    "test/multi": {
+      "images": 107,
+      "patches": 27392
+    }
+  },
+  "association": {
+    "eligible_sources": 658,
+    "one_partner_sources": 631,
+    "two_partner_sources": 27,
+    "fallback_sources": 10,
+    "matched_counts": "endpoint and joint-pair counts in consumed valid-patch and view units per cycle and cumulatively",
+    "consumed_mixed_mass": {
+      "valid_patches": {
+        "total": 17712121,
+        "eligible": 17449591,
+        "fallback": 262530,
+        "eligible_singleton": 167243,
+        "changed_pair": 17282348,
+        "self_assigned_including_fallback": 429773
+      },
+      "views": {
+        "total": 278403,
+        "eligible": 274275,
+        "fallback": 4128,
+        "eligible_singleton": 2737,
+        "changed_pair": 271538,
+        "self_assigned_including_fallback": 6865
+      }
+    },
+    "limits": [
+      "whole-pair/source association, not isolated first-endpoint identity",
+      "parent comparisons also change endpoint sampling distributions",
+      "equal counts do not imply equal alpha-weighted contributions, batch loss weights or pixel label distributions",
+      "PS is not fully decorrelated",
+      "changed endpoint identities do not prove different RGB/labels in every formal cycle"
+    ]
+  },
+  "independent_audit": {
+    "means_recomputed": 72,
+    "max_mean_difference_degrees": 8.881784197001252e-16,
+    "native_RAW_GT_fixtures": 4,
+    "native_pixel_mean_checks": 16,
+    "max_native_pixel_mean_difference_degrees": 9.992007221626409e-15,
+    "historical_result_files_byte_identical": 12,
+    "completed_cohort_inventory_files": 717,
+    "final_supplement_inventory_files": 753,
+    "hash_mismatches": 0,
+    "explicit_corresponding_file_comparisons": 39,
+    "prior_local_files_rehashed": 47,
+    "inventory_scope_overlap": true,
+    "isolation": "fresh context/separate processes; shared filesystem and model family; limited isolation",
+    "not_performed": [
+      "independent retraining",
+      "full inference rerun",
+      "every-image native-pixel replay",
+      "historical system-call trace"
+    ]
+  },
+  "next_candidate": {
+    "name": "bounded spatial intensity",
+    "state": "prepared_only_not_activated",
+    "parent": "O",
+    "mixed_branch_rgb_multiplier": "1 - alpha/2",
+    "multiplier_range": [
+      0.5,
+      1
+    ],
+    "labels_unchanged": true,
+    "actual_source_calibration_performed": false,
+    "training_performed": false,
+    "efficacy_or_novelty_claim": false
+  },
+  "provenance_sha256": {
+    "strict_comparison": "8ed21416a7c00c41cfa116a54aad6e390f50981f4d237bb6bafdea4708cdcfbf",
+    "final_selection": "a14d26e312f4e6f25f1db30aa31fb9613ad7cb2000a9565fb177b8101d900bef",
+    "protocol": "6af31bc57c94ae4d5dea51b4e3ef723052d67a41ae071959918e43b7258c99bd",
+    "evaluation_manifest": "075bd82f427e2d6113756622d8f7e9169433408126959db1eb4324f8e7588543",
+    "freeze_manifest": "1df963af82e603a8a085e2324ddcbd6d43538518c0b3d6defb66dccdc58ff400",
+    "evaluation_approval": "e72f0ca4637e10ff7ae1ed4ae15580cad407a6088e48c128a4b4c28bcb03f762",
+    "final_audit_report": "47347b7573a4623b4a0cfdabd46f730b57c5806a03091555abf3ab65378a2cfa",
+    "completed_cohort_review": "5f9b4363df27d572db40cbbcc398f573fe5db6dcfc3c1e9bd0baf2cf5ba1b42a",
+    "audit_result": "b21dbc186dc40c434f92fc00a0f341f6fe618aad56915df5404d96deff4f1087",
+    "audit_supplement": "6306c39fcd3447e3baceec8601edfc334c8408e473657a67e608b77f8f6d2f1c",
+    "checkpoints": {
+      "baseline": "94d1cbf18b550156d46b6a201f87cc5d05619ab7e73c19983d7785bd382d39bb",
+      "parent": "7670d875b96331df7e3c937748aee40d006e8147710ae77ad4962eabb7291351",
+      "AN": "4ac0bc0dce13fabe3ba2c255032ca941b6384710760f567439912105cf68e726",
+      "PS": "13ece88bb7fea6886d640e9006a2d35a3367c40f30cc8d978cf8de3c3dd41b1f"
+    },
+    "development": {
+      "parent": "8e329b764cf93d117b6834283960dde363c73265aebfe81a0b0a706e4cfdd2d0",
+      "AN": "fd107a69e8091e815612a7519cde09188c438d8b6ac0ea774baa98f1fb56c9ea",
+      "PS": "c61ed38939eed42347c81e4a2735fc26a0abe59fd875f2a3dc050f87be8e5f66"
+    },
+    "matched_ledgers": {
+      "AN": "aa83689aa0cc42450318bddfc8a3d398d8c4d9c25bc2a83f69cd21194f47cabb",
+      "PS": "aa83689aa0cc42450318bddfc8a3d398d8c4d9c25bc2a83f69cd21194f47cabb"
+    },
+    "final_evidence": {
+      "val_baseline_summary.json": "58bcb99cbbd249d042d74655986452a8f8af2eb4092637c44e48f447c4416603",
+      "val_baseline_per_image.csv": "50f123760d13b36486d2fdbf9ad53910226790ad051497a617fd50fd6325787e",
+      "val_baseline_patches.npz": "762c408a0009ee109204fd1715a02ed4f0fed82262a7aa0cdde2964fe2f4244b",
+      "test_baseline_summary.json": "9acfc5ad01a931c60c50410a8ff1f95379d517eed70f66741c37d55a99b696b8",
+      "test_baseline_per_image.csv": "72d4fb75ffca12a42e2bb2ada4ee45aab56aabac0b797b9e18fd7945234e46ed",
+      "test_baseline_patches.npz": "2e9723e7487e16fd4d23530710565955d07f6d3982a7593669a60be5aabecdaa",
+      "val_parent_summary.json": "946eb0165d38901d2571d1253e378137aa238070c6dd8f3936de55719046da16",
+      "val_parent_per_image.csv": "958fe803a4341dbbfeec328f6b38a7695ee955431844bad98eb3a3ebcf1c8cca",
+      "val_parent_patches.npz": "04a0b669c14e260f557f6eaf37fa83dad27a6578554395a111bb08ec10c0c008",
+      "test_parent_summary.json": "4663cf950bcb0c656d0feff390268bbb63e9ac4774f8520dfebfc251ca276f21",
+      "test_parent_per_image.csv": "773f7d24c31e240004ffcbed1bd69818ec5e5968a36c4179122920cbef08522c",
+      "test_parent_patches.npz": "2238d17af76fd462da8b2e2dc1b1d340c989994e0e48e5c99b9c83a7b187159e",
+      "val_AN_summary.json": "8529b5fe82b0332d0fcd6504efadfc2d50cd5b5913ac8c4600e86d9d981f1039",
+      "val_AN_per_image.csv": "dc1ed408f8faf12c73e1ef93ec19517915a50df2ca7e0777977c806af94a57af",
+      "val_AN_patches.npz": "cf7a878c961ae5281927a6b7431337aead1c2f744f7d7e434f8c1dc1bd40827a",
+      "test_AN_summary.json": "20ad80aaee895f6ad86d16ebbd91f8b0f7e0347382cd14c5bffcc75434e0ad10",
+      "test_AN_per_image.csv": "6edc89d4003625963905edffd20574f19649135f218f56238df2360ffd441227",
+      "test_AN_patches.npz": "647f46d95791c8d7e820521a2b85ad144d5d3f58c86520542c1998b76337b8ba",
+      "val_PS_summary.json": "53b531024d51544f1a02a10053495f8f491ba473978507dc44bc0d32ec19fb61",
+      "val_PS_per_image.csv": "23e8a19dbdf1d6f22df02fc423a8f26f8eb47ed706f2996d31b43fba5834f12a",
+      "val_PS_patches.npz": "125ed757fa745afeb90c230a9ef98404e6da80e5e29626ab043836b6ba71df00",
+      "test_PS_summary.json": "423c040b64bc3cdb7233a5399e02376a18f5898ef67b6a6d1f2d729add20b86c",
+      "test_PS_per_image.csv": "3c182495484fd0795add55e30dab2c2485dcb0c84d72627d19bcb1a59b6c0df9",
+      "test_PS_patches.npz": "461434e9bcf228ac014fd704444a91c52ed4b6885ae72a9c67dc6bd4c07fe15c"
+    },
+    "next_intensity_protocol": "be03a6b20ca3f4c484bb418e676221ce6baa17b0df6d3277792e66aa6266f537",
+    "next_parent_binding": "49931b632d5ed7feee3445c954ee000a86717f7ae18029016e55f2b2ca635e75"
+  },
+  "limitations": [
+    "single-seed exploratory result; no seed1/2 completion",
+    "historical test exposure and binary-failure continuation; not a fresh blind study",
+    "baseline used real mixed-light training and is a fixed historical single-seed reference",
+    "no efficacy, novelty, physical relighting or statistical superiority claim",
+    "hashes identify private artifacts without publishing their contents; not an independently runnable release"
+  ]
+}

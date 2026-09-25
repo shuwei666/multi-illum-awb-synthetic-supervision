@@ -4,7 +4,25 @@ Updated: 2026-09-25 · Agent: codex
 
 当前主线是 **LSMI Nikon + 固定 One-Net**：仅以 train 单光源图像及其 Light1 做白平衡，通过重光照生成训练图像和光照标签，研究减少真实多光源逐像素标注依赖的可能性。允许所有 train 全局白点，包括多光源场景各个 Light1/2/3 的颜色；真实混光图像、逐像素 GT、混合权重及其派生信息禁止用于新方法的构造、训练、开发选型或调参。人工生成的光照 map 可作合成监督。
 
-前三轮训练与统一评测均已完成，**尚未达到原 One-Net baseline 的性能**。第三轮按冻结开发分数选中 O，组合规则复用 O，不新增 COMBO。独立复核确认 O 及 AC/B/ER/EP 均为 **0/18** 格严格低于 baseline；本轮未触发追加 seed 1/2 的授权条件。运行正确性 PASS 不等于性能通过。
+前三轮及 AN/PS 源图—整对白点关联对照的训练与最终评测均已完成，**尚未达到原 One-Net baseline 的性能**。AN/PS 按冻结开发分数仍选中父项 O；相对同一个原 baseline，O 为 **0/18**，AN 与 PS 各为 **3/18**，仅改善 val 单光源的三个指标，没有任何 test 指标改善。未启动 seed 1/2，三 seed 目标未完成。结果可追溯性 PASS、性能 FAIL、契约 ADEQUATE；证据为 S1 完整失败实验，不是 S2 性能成功。
+
+## AN/PS 当前结果
+
+仅使用 668 张官方 Nikon train 单光源 `_1.tiff` 及其 Light1 作为图像来源；允许全部 1,353 个 train 全局白点，包括多光源场景的 Light1/2/3。真实混光图像、dense GT 与混合权重不得进入构造、训练、开发选择或调参。
+
+AN 把每张源图与本场景的整对白点关联；PS 在匹配实际消耗量的分组内置换整对白点。两组分别完成 seed 0 的 69,600 次更新、417 个 cycle；冻结开发分数为 O 0.857399、AN 0.959159、PS 0.898324，越低越好，故继续选择 O。O 的 checkpoint 与历史结果完全复用，不能算新的训练成功。
+
+| 模型 | test patch pooled mean（度） | test pixel image-balanced mean（度） | 严格优于 baseline |
+|---|---:|---:|---:|
+| 原 baseline | 1.969242 | 2.167129 | 参照 |
+| O（父项、开发预选） | 2.423858 | 2.537886 | 0/18 |
+| AN | 2.562605 | 2.662584 | 3/18 |
+| PS | 2.708524 | 2.808053 | 3/18 |
+
+角误差越低越好。全部 **72 个均值 = 4 个模型 × 每模型 18 格** 及 54 个候选差值保存在[机读摘要](results/nikon_source_association/summary.json)；[完整结果与限制](docs/nikon_source_association_results.md)说明配对、选模和独立复核边界。18 格不是 18 个独立统计检验。AN 与 PS 比较的是源图与整对白点的关联，不能单独归因于第一端点；与父项相比还改变了端点抽样分布，不作有效性或新颖性结论。
+
+下一项固定空间强度候选仅已准备：在合成混光分支令 RGB 乘以 `1 - alpha/2`，保留光照图与标签，父项绑定 O。尚未做真实来源校准或训练；进入实验仍需完整实现、独立校准与启动验收，不能把准备状态写成新实验结果。
+
 
 ## 第三轮当前结果
 
@@ -21,7 +39,7 @@ Updated: 2026-09-25 · Agent: codex
 
 O/B/ER/EP 各完成 69,600 次更新。O 的开发分数从 AC 的 0.886318 降至 0.857399，但不代表所有开发子项改善，更不证明 test 达标；O test patch/pixel 仍比 baseline 高 0.454616° / 0.370757°。[第三轮完整负结果](docs/nikon_round3_results.md)保留全部 val/test 子集与证据边界。
 
-AN/PS 源图—整对白点关联对照已在第三轮真实结果之前预声明；当前仅 helper 与 toy renderer 通过 CPU 独立验证，完整 runner、真实 Nikon 校准和训练仍待完成。构造 parent 固定为开发选中的 O；触发依据是目标未达成，不能声称整个迭代是新盲测，也不作方法有效性或新颖性结论。
+AN/PS 源图—整对白点关联对照在第三轮真实结果之前预声明，随后完成独立校准、训练和最终审计，结果见上方当前章节。构造 parent 固定为开发选中的 O；触发依据是目标未达成，不能声称整个迭代是新盲测，也不作方法有效性或新颖性结论。
 
 ## 第二轮当前结果
 
@@ -76,6 +94,8 @@ M 是四个合成训练模型中的最好结果，仍比 baseline 高 0.75655°�
 - [第一轮机读结果与哈希](results/nikon_round1/summary.json)
 - [第二轮 18 格机读结果与哈希](results/nikon_round2/summary.json)
 - [第三轮 18 格机读结果与哈希](results/nikon_round3/summary.json)
+- [AN/PS：完整结果、冻结选择与限制](docs/nikon_source_association_results.md)
+- [AN/PS：72 个均值、54 个差值与证据哈希](results/nikon_source_association/summary.json)
 - [证据范围与发布边界](EVIDENCE.md)
 - [Sony 历史实验复盘](docs/sony_historical_report.md)及[其历史证据索引](docs/sony_historical_evidence.md)
 
