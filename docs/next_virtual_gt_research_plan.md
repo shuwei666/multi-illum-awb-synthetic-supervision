@@ -1,255 +1,335 @@
-# 下一阶段 Virtual GT 研究意见（GPT-5.6 Sol）
+# 下一阶段 Virtual GT 策略（GPT-5.6 Sol）
 
 Updated: 2026-09-25  
-Author: **GPT-5.6 Sol（研究意见，不代表已验证实验结论）**
+Author: **GPT-5.6 Sol**  
+Status: **研究意见 / 下一阶段实验策略，不代表已验证结论**
 
-> 本文基于当前 Nikon 三轮实验、LSMI / One-Net 协议，以及对 multi-illuminant color constancy、synthetic relighting、dense illumination estimation 等相关工作的广泛调研形成。建议项在真实实验完成前不应写成性能结论。
+> 本版吸收 Nikon round 1–3、AN/PS 最新结果，以及一个关键修正：**content/source 与 illumination state 不应互斥分配。** 同一个单光源 source 可以在训练过程中反复生成 original、global-relit 和 spatial mixed 等不同光照状态。Virtual GT 的优势应来自 on-the-fly illumination-state coverage，而不是把有限 source 切成若干互斥子集。
 
-## 1. 核心判断
+## 1. 当前证据如何重新理解
 
-当前路线不应继续被理解为“再设计一种 alpha mask”。真正值得推进的问题是：
+当前固定 One-Net 的主要结果：
 
-**能否只依赖真实单光源图像和廉价 global illuminant labels，构造可控的 virtual pixel-wise illuminant GT，并利用 coverage、controllability、combinatorics 与 targeted sampling，最终超过固定 One-Net 原有的真实单/多光源监督训练范式？**
+| 模型 | test all patch | test single | test multi |
+|---|---:|---:|---:|
+| 原 baseline | 1.96924 | 1.34651 | 2.53378 |
+| M | 2.72580 | 2.00299 | 3.38104 |
+| AC | 2.43142 | 1.68796 | 3.10540 |
+| O | **2.42386** | **1.52070** | 3.24261 |
+| B | 2.42972 | 1.67393 | **3.11488** |
+| AN | 2.56261 | — | — |
+| PS | 2.70852 | — | — |
 
-One-Net 应继续固定，作为快速 supervision probe。只有 virtual GT 在固定 One-Net 上过关后，再迁移到真正 dense-output 网络，才能把数据监督收益与 architecture 收益分开。
+O 的操作不是新的 spatial GT。它相对 AC 把 25% 单端点 global-relit 分支替换成原始单光源，因此：
 
-已有文献已经覆盖 single/unique-illuminant → synthetic dual/multi illumination、pixel-wise illuminant estimation、relighting augmentation 等方向。因此 novelty 不能建立在“第一次从单光源合成多光源”上。更可防御的贡献是把 virtual dense supervision 看成一个**可设计的训练分布**，系统分解 endpoint relation、global dominance、local contrast、spatial scale、intensity field 和 GT-aware sampling，并最终验证 virtual-GT-only supervision 能否超过有限真实 multi-light supervision。
+- AC = 25% original + 25% global-relit + 50% M mixed；
+- O = 50% original + 50% M mixed。
 
-## 2. 当前结果给出的信号
+O 相对 AC 的主要变化是 single 从 1.688° 改善到 1.521°，但 multi 从 3.105° 退化到 3.243°。因此 **O 不证明“50/50 是最优比例”**。更合理的解释是：
 
-第一轮 G/R/M/P 的 test patch mean 为 2.98131 / 2.87320 / 2.72580 / 2.76464°。空间变化从 G 到 M 明显帮助真实 multi 子集，但 P 没有继续改善，因此 spatial supervision 是有效信息，继续堆叠 anchor-patch trick 的优先级不高。
+> **identity/original illumination state 是一个必须稳定保留的真实 anchor；增加 synthetic illumination 不应该以减少 source 在 identity state 下的覆盖为代价。**
 
-第二、三轮说明恢复真实/单端点样本覆盖很重要。AC 达到 2.43142°，O 达到 2.42386°，相较 M 的 2.72580° 已明显缩小 gap，但仍没有超过原 baseline 1.96924°。
+当前与 baseline 的 gap 也已经很不对称：
 
-我的判断是：主要瓶颈越来越不像“有没有 spatial GT”，而更像联合分布仍不匹配：
+- single gap：约 **+0.174°**；
+- multi gap：约 **+0.709°**。
 
-p(L1, L2, alpha, S, scale, content, sampling).
+因此下一阶段真正要攻的是 synthetic mixed-light branch，而不是继续优化 single-light distribution。
 
-LSMI 的真实 dense illumination GT 本身也可理解为独立 illuminant chromaticity 与 pixel contribution coefficient 的组合。因此当前
+B 改变每图主导光源比例后，multi=3.115°，优于 O 的 3.243°，但 single 较差。这提示 global dominance 可能值得继续研究；它不是因果证明，但比继续增加随机 alpha 纹理更有针对性。
 
-E(x) = alpha(x)L1 + [1-alpha(x)]L2
+AN/PS 负结果说明简单的 source-image / whole-endpoint-pair association 没有解决当前问题。它不能排除更一般的 endpoint prior，但 **same-scene endpoint pairing 不再作为 P1 主线**。
 
-这个核心表示不应首先被推翻。更应该研究 endpoints 如何配对、alpha 如何分布、空间尺度如何控制、总照度如何变化，以及 virtual GT 最后如何进入 patch sampling。
+## 2. 核心策略：Content Bank × Illumination-State Sampler
 
-## 3. 下一版：factorized virtual-GT generator
+不要把 668 个 source 分成 original 与 mixed 两部分。
 
-建议正式抽象为：
+把每个 source 视为一个可重复使用的 content / reflectance-like base：
 
-G_VGT(theta), theta = (L1, L2, q, tau, s, beta)
+[
+B_i = I_i / L_i.
+]
 
-其中：
+然后在训练时 on-the-fly 采样 illumination state：
 
-- L1, L2：illuminant endpoints；
-- q：整幅图 global dominance；
-- tau：固定 global dominance 后的 local contrast；
-- s：illumination spatial correlation scale；
-- beta：总入射强度场变化；
-- 同时保留 pixel-wise alpha(x), S(x), E(x)。
+[
+(B_i,; z) ightarrow (I_{i,z}, E_{i,z}).
+]
 
-### 3.1 第一优先级：exact-q global dominance
+同一个 (B_i) 可以经历无限多个状态：
 
-沿用 M 的 base field Z_M，改为：
+[
+B_i ightarrow
+{	ext{identity},	ext{global relit},	ext{weak mixed},	ext{strong mixed},ldots}.
+]
 
-alpha(x) = sigmoid(tau * Z_M(x) + b_q)
+因此方法框架应从 categorical dataset mixture 改成：
 
-先抽：
+[
+oxed{	ext{Content Bank} 	imes 	ext{On-the-fly Illumination-State Distribution}}
+]
 
-q ∈ {0.1, 0.3, 0.5, 0.7, 0.9}
+668 个场景的 content diversity 固然有限，但 illumination conditional diversity 可以非常大。
 
-再数值求解 b_q，使 image-level mean alpha 精确等于 q。
+## 3. 第一优先级实验：每个 source 强制 paired identity + mixed
 
-第一组 Q 实验保持 tau=1、M 的 6×6/18×18 base field、One-Net、patch 数和 69,600 updates 全部不变，只测试 exact-q 本身。
+当前训练本来就是每 source / cycle 生成两个 view。最干净的下一组实验不增加预算：
 
-### 3.2 第二优先级：解耦 local contrast
+[
+V_i^{(0)}=	ext{identity}(B_i,L_i)
+]
 
-在 exact-q 不变的前提下：
+[
+V_i^{(1)}=	ext{synthetic-mixed}(B_i,E_i(x)).
+]
 
-tau ∈ {0.5, 1, 2}.
+两个 view：
 
-每次改变 tau 后重新求 b_q，保证 mean alpha 仍为目标 q。
+- 来自同一个 source；
+- 使用同一 crop / resize / flip / geometry；
+- 一个保留原始 Light1；
+- 一个 on-the-fly 生成 spatial mixed illumination；
+- 各自使用准确 GT；
+- 不新增 consistency loss；
+- 仍为两个 view、每 view 64 patches；
+- optimizer updates 仍固定 69,600。
 
-这样可以区分两个以前纠缠的问题：谁是主光，以及在相同主次关系下局部 illumination deviation 有多强。这比继续增加随机 alpha texture 更有解释力。
+这与 O 的区别非常重要。
 
-### 3.3 第三优先级：GT-aware patch sampling
+O 是训练分布意义上的 50% original / 50% mixed；paired 方案则保证：
 
-Virtual GT 的独特优势是生成器知道每个候选 patch 的 illumination regime。
+[
+oxed{orall; source,quad identity;state;+;mixed;state}
+]
 
-建议每个 view 的 64 patches 改为：
+都被覆盖。
+
+因此它检验的不是“比例”，而是：
+
+> **每一个有限 content 是否都应该同时承担真实 identity anchor 与 synthetic illumination expansion。**
+
+如果 paired coverage 优于 O，即可把后续研究正式建立在“source reuse × illumination-state randomization”上。
+
+## 4. 第二优先级：只改 paired 方案中的 mixed generator
+
+Identity view 保持完全真实，不再反复调整。
+
+研究资源全部投入第二个 synthetic view。
+
+### 4.1 Controlled global dominance
+
+从 M 的 base field (Z(x)) 出发：
+
+[
+alpha(x)=sigma(	au Z(x)+b_q).
+]
+
+先采样目标 image-level dominance：
+
+[
+q in {0.1,0.3,0.5,0.7,0.9},
+]
+
+再求 (b_q)，使：
+
+[
+operatorname{mean}_xalpha(x)=q.
+]
+
+这样主光 / 辅光比例成为显式受控变量，而不是随机场的副产品。
+
+B 的结果使这一方向比之前更值得优先验证。
+
+### 4.2 Local contrast 与 global dominance 解耦
+
+固定 q 后再改变：
+
+[
+	auin{0.5,1,2},
+]
+
+每次重新求 (b_q)。
+
+这样分别控制：
+
+- q：谁在整幅图中占主导；
+- tau：相同主次关系下，局部 illumination variation 有多强。
+
+不要再通过增加更多 random alpha shape 间接改变这两个因素。
+
+### 4.3 Spatial scale 必须显式记录
+
+对 synthetic view 记录：
+
+- patch mean alpha；
+- patch std(alpha)；
+- mean |grad alpha|；
+- illumination correlation scale。
+
+M 的 18×18 fine field 与 One-Net 16×16 patch 已处于相近尺度。若 patch 内 illumination variation 太大，patch-average GT 可能成为较困难的监督接口。
+
+先做诊断，再决定是否把 scale 作为下一训练因素。
+
+## 5. 第三优先级：GT-aware patch sampling
+
+Virtual GT 的一个真正独有优势是：生成器知道哪里是主光区、辅光区和 transition 区。
+
+在 synthetic mixed view 中，可以把 64 patches 拆成：
 
 - 32 uniform；
 - 32 GT-stratified。
 
-按 patch mean alpha 初始分三类：
+例如按 patch mean alpha 分为：
 
-- A-dominant: mean alpha < 0.2
-- mixed: 0.2 <= mean alpha <= 0.8
-- B-dominant: mean alpha > 0.8
+- A-dominant：<0.2；
+- mixed：0.2–0.8；
+- B-dominant：>0.8。
 
-stratified quota 可先用 11/10/11；某类不存在时动态分配，不为了完成 quota 人工造 patch。
+某类不存在时动态重分配，不为了 quota 人工制造区域。
 
-同时记录 patch 内 std(alpha)。因为两个 patch 即使 mean alpha 都是 0.5，一个可能处处接近 0.5，另一个可能一半接近 0、一半接近 1，后者对 One-Net 的训练含义完全不同。
+目标不是改变 GT，而是避免小面积 secondary-light 区域因为面积小而几乎不贡献梯度。
 
-### 3.4 高优先级新增：same-scene endpoint co-occurrence
+这应该在 paired identity+mixed 和 controlled-q 之后测试，而不是一开始与 generator 混在一起。
 
-这是本轮文献调研后我最值得新增的方向之一。
+## 6. 关于空间强度：不要把 chromaticity 与 intensity 混成一个变量
 
-在不读取 mixture image / mixture map / dense GT 的前提下，可以利用 train metadata 的 Light1/2/3 global chromaticity 建立同场景 endpoint pair pool：
+仓库准备的候选是在 mixed branch 上：
 
-P_cooccur = {(Li, Lj) | Li, Lj 来自同一个 train scene}.
+[
+I'(x)=I(x),[1-alpha(x)/2]
+]
 
-它保留“什么样的两盏灯在真实场景中共同出现过”的 joint prior，同时不破坏 single-source / no-real-dense-GT 边界。
+而 illuminant chromaticity label 不变。
 
-最干净的实验是：
+如果这个乘子是对 RGB 三通道相同的 scalar，它本身不会改变 chromaticity GT；可以解释为一个与 alpha 相关的总照度 / shading field。因此它不必然构成 label inconsistency。
 
-Q-tau + global random pair
-vs
-Q-tau + same-scene pair.
+但它把 intensity 与 alpha 强绑定：
 
-不要一开始混合两种 pair；先判断 co-occurrence 本身有没有价值。
+[
+S(x)=1-alpha(x)/2.
+]
 
-### 3.5 Factorized intensity field
+这样如果实验有效，很难知道收益来自“真实场景确实存在强度变化”，还是来自这一特定负相关。
 
-第二轮 S 的方向值得保留，但下一版应把 brightness、dominance、local contrast 解耦。
+更合理的长期形式是 factorize：
 
-独立生成 S(x)，再定义：
+[
+E_c(x)=alpha(x)L_1+[1-alpha(x)]L_2
+]
 
-u1(x) = S(x) alpha(x)
-u2(x) = S(x) [1-alpha(x)]
+[
+I_{m syn}(x)=B(x),S(x),E_c(x),
+]
 
-因此：
+其中：
 
-S = u1 + u2
-alpha = u1 / (u1 + u2)
+- (E_c(x))：chromaticity field，作为 virtual GT；
+- (S(x)>0)：独立 scalar intensity / shading field，不进入 chromaticity GT。
 
-最终仍有：
+先比较 (S=1) 与一个独立低频 (S(x))，再研究 (S) 与 alpha 的相关性。
 
-E(x) = alpha L1 + (1-alpha)L2
-I_syn = WB * S * E.
+## 7. 暂时降级的方向
 
-第一轮 brightness 只比较 beta=0 与一个非零值（如 0.5），不要大范围扫参。
+### Same-scene endpoint pairing
 
-## 4. 两项零训练成本审计
+AN/PS 已经说明简单的 source / whole-pair association 没有带来改善。它不能彻底否定 endpoint joint prior，但当前不值得占用主实验预算。
 
-### 4.1 Black-level / linear-domain audit
+### 更多随机 alpha shape
 
-需要确认 Nikon 单光源 TIFF 在执行 WB=RAW/Light1 前后的 black-level convention 与 One-Net baseline 输入完全一致。
+M 已证明 spatial variation 有用，但 P、S 等结果没有支持“越复杂越好”。下一阶段优先控制 distribution，而不是继续增加 texture family。
 
-如果输入仍带 additive black offset，纯乘法 diagonal relighting 会把 additive offset 转成 illuminant-dependent color term。
+### 三光源
 
-这不是断言当前 runner 有错，而是公开协议不足以排除它。继续 generator search 前应直接审计生产代码和真实输入。
+LSMI 有三光源场景，但当前 two-light synthetic branch 还比真实 baseline multi 高约 0.7°。在 two-light 的 contribution field、intensity 与 sampling 尚未厘清前，直接加入三光源会同时增加多个自由度，暂列后续。
 
-### 4.2 Normalization audit
+### 新 consistency loss
 
-当前协议写明 whole image 和 patch 分别 z-score，但应明确统计维度。
+paired same-content views 天然允许 consistency/equivariance，但第一轮不要加。两个 view 已有准确 GT，应先证明 **paired virtual supervision 本身**有效，避免把贡献变成 loss engineering。
 
-若 RGB 三通道各自独立 z-score，则正 diagonal illuminant gain 会被数学上消除；如果 RGB tensor 共用 scalar mean/std，则没有这个精确不变性。
+## 8. 最小实验矩阵
 
-应写自动测试，比较同一 WB source 在不同 illuminant relighting 后，经过完整 preprocess 的输入张量差异。
+固定 One-Net、初始化协议、69,600 optimizer updates、两个 views/source/cycle、每 view 64 patches。
 
-## 5. Patch-scale diagnosis
+| 实验 | View 1 | View 2 | 唯一主要变化 |
+|---|---|---|---|
+| O | stochastic original/mixed | stochastic original/mixed | 当前 parent |
+| Pair-M | identity | M mixed | 每个 source 强制双状态覆盖，共享 geometry |
+| Pair-Q | identity | controlled-q mixed | 显式控制 global dominance |
+| Pair-QT | identity | controlled q + tau | 再解耦 local contrast |
+| Pair-QT-Samp | identity | QT + GT-aware sampling | 检验 minority/transition patch coverage |
 
-One-Net 假设小 patch 可近似由一个 illuminant 描述；而 M 的 fine field 是 18×18 grid 上采样到 256×256，典型 spacing 与 16×16 patch 已处于同一量级。
+如果预算更紧，只跑前三个：**Pair-M → Pair-Q → Pair-QT**。
 
-先不训练，在 frozen synthetic val 对每个 patch 记录：
+每一步都同时报告 single / multi。主目标是：
 
-- mean alpha
-- std(alpha)
-- mean |grad alpha|
+- single 不丢掉 O 已恢复的能力；
+- multi 从 O 的 3.2426° 明显向 baseline 2.5338° 靠近。
 
-在固定 mean-alpha bin 内画 angular error vs intra-patch variation。
+## 9. 决策规则
 
-如果误差随 patch 内变化显著上升，再做 matched diagnostic：保持 patch mean GT 不变，只缩放 patch 内 illumination variation。这个实验能直接回答当前 virtual pixel GT 的空间尺度是否与 One-Net 的监督接口匹配。
+### 如果 Pair-M > O
 
-## 6. 推荐实验顺序
+说明 O 的收益不只是“每个 source 同时看到两个状态”；随机 illumination-state sampling 可能本身更适合当前优化。停止把 paired coverage 当主线，回到 mixed generator distribution。
 
-已有 C/A/AC/L/S 和第三轮结果保留。下一阶段建议：
+### 如果 Pair-M < O，且 single 不退化
 
-| 优先级 | 实验 | 主要问题 |
-|---|---|---|
-| P0 | black-level / normalization audit | relighting 与 illuminant signal 是否正确 |
-| P0 | O/E diagnostic controls | global relighting 本身损失多少 |
-| P1 | Q | global dominance coverage 是否是主要缺口 |
-| P1 | Q-tau | dominance 与 local contrast 是否需要独立控制 |
-| P1 | Q-tau-Samp | minority-light / hard-region 是否被充分训练 |
-| P1 | Q-tau-Pair | endpoint co-occurrence realism 是否重要 |
-| P2 | Q-tau-S | total intensity field 是否进一步缩小 sim-to-real gap |
-| P2 | scale-controlled | illumination spatial scale 是否匹配 patch assumption |
-| P3 | content-aware fields | 最后再引入 geometry/object-aware support |
+说明“每个 content 都覆盖 identity + mixed”是有效结构。后续所有 generator 实验都以 paired protocol 为 parent。
 
-所有正式 One-Net 比较继续固定 **69,600 optimizer updates**。
+### 如果 Pair-Q 主要改善 multi
 
-## 7. 最小但信息量最大的下一轮
+继续研究 q / tau / scale / sampling，这是最理想的信号。
 
-如果实验预算有限，我建议只跑四个新的主实验：
+### 如果 Pair-Q / QT 都无法明显改善 multi
 
-1. **Q**：M + exact-q；
-2. **Q-tau**：Q + controlled local contrast；
-3. **Q-tau-Samp**：Q-tau + GT-aware patch sampling；
-4. **Q-tau-Pair**：Q-tau + same-scene endpoint pair。
+不要继续堆 alpha 参数。优先转向：
 
-同时先完成无需训练的 black/z-score audit 和 M 的真实 generator-distribution histogram。
+1. intensity / contribution-field factorization；
+2. linear-domain / black-level / normalization audit；
+3. synthetic-vs-real mixed-light statistics；
+4. 再决定是否需要 geometry/content-aware illumination support。
 
-不要一次把 q、tau、pair、sampling、brightness 全揉在一起。我们现在需要的不只是更低数字，而是知道**为什么 virtual GT 变强**。
+## 10. 最终方法论定位
 
-## 8. 论文最终应该争取的三个命题
+我现在最推荐的主线不是：
 
-### 命题 A：可控 virtual supervision 可以超过有限真实 multi-light supervision
+> 50% original + 50% synthetic。
 
-最硬的目标仍然是固定 One-Net 下 virtual-GT training < 1.96924°。最终应以多 seed、paired scene statistics 和额外 camera/holdout 确认，而不是单 seed test 最小值。
+而是：
 
-### 命题 B：优势来自 controllability，而不只是 synthetic sample 数量
+[
+oxed{
+	ext{有限 Content Bank}
+	imes
+	ext{无限 On-the-fly Illumination States}
+}
+]
 
-通过 q、tau、pair、S、sampling 的逐层消融证明。
+其中每个 source 的真实 identity state 被稳定保留，synthetic branch 负责扩展真实数据难以覆盖的 illumination space。
 
-### 命题 C：virtual GT 是 supervision source，而不是 One-Net trick
+Virtual GT 想超过真实 mixed-light supervision，应该利用的不是“合成图片更多”这个粗粒度优势，而是：
 
-winning generator 之后迁移到官方 LSMI U-Net / PWCC 等 dense network；如果仍有收益，才真正说明方法与网络解耦。
+[
+oxed{
+	ext{content reuse}
++
+	ext{exact supervision}
++
+	ext{controllable illumination coverage}
++
+	ext{targeted sampling}
+}
+]
 
-## 9. 与已有工作的边界
+这也是目前我认为最值得用固定 One-Net 验证的下一阶段策略。
 
-相关工作已经包括 pixel-wise illuminant recovery、LSMI 的真实 dense multi-illuminant dataset 与 pixel-level relighting augmentation、physics-driven multi-illumination generation、unique/single-illumination → dual-illumination synthetic generation、white-balanced agent + artificial illuminant relighting、dense illumination-map estimation 与 structured illumination decomposition。
+## 11. 相关工作边界
 
-因此不要声称“首次从单光源生成多光源监督”。
+LSMI 已展示 pixel-level relighting augmentation 能提升 multi-illuminant white balance，并提供 illuminant chromaticity、pixel-wise mixture ratio 与 dense GT。后续 pixel-wise color constancy 工作也强调 illumination map 的空间连续性。
 
-更稳妥的研究定位是：
+因此不要把“同一 scene 做 relighting augmentation”本身作为 novelty。
 
-> 将 virtual dense illuminant supervision 建模为一个可控的 latent illumination distribution，并系统研究 endpoint co-occurrence、global dominance、local contrast、spatial scale、intensity coupling 与 GT-aware sampling 如何决定 synthetic-to-real transfer；最终验证这种只依赖 single-light/global-label 的 supervision 是否能够超过有限真实 multi-light supervision。
+更值得争取的贡献是：
 
-## 10. 我的最终意见
+> **在不使用真实 mixed image / mixture map / dense GT 构造训练监督的前提下，把单光源 content bank 与 illumination-state distribution 解耦，并系统证明受控 virtual dense supervision 如何在固定模型和固定训练预算下缩小乃至超过真实 multi-light supervision。**
 
-如果只能押一条主线，我押：
-
-**Controlled Contribution-Field Virtual GT**
-
-即：
-
-realistic endpoint relation
-× global dominance q
-× local contrast tau
-× spatial scale
-× total intensity S
-× GT-aware sampling.
-
-而不是继续发明更多 random alpha shapes。
-
-真实 dense GT 最大的优势是**真实**；virtual GT 如果想超过它，必须利用真实数据不容易拥有的优势：
-
-**coverage + controllability + combinatorics + targeted sampling.**
-
-目前 M 已证明 spatial virtual GT 有信息量；第二、三轮又证明保留真实/单光源分布很重要。下一步应该把这些经验统一成一个**因子化、可测量、可消融的 virtual dense supervision system**。
-
-这是我认为最有机会把项目从 synthetic augmentation engineering 收敛成明确方法论贡献的路线。
-
-## 11. 重点参考工作
-
-- Kim et al., Large Scale Multi-Illuminant (LSMI) Dataset for Developing White Balance Algorithm, ICCV 2021.
-- Das et al., Generative Models for Multi-Illumination Color Constancy, ICCV Workshops 2021.
-- Xing et al., Dual-Illumination Weighting and Estimation, ICPR 2022.
-- Cun et al., Learning Enriched Illuminants for Color Constancy, 2022.
-- Domislović et al., multi-illuminant extension of One-Net, 2023.
-- Li et al., MIMT / multi-illuminant multitask work, 2022–2023.
-- Entok et al., PWCC: Pixel-Wise Color Constancy, ICIP 2024.
-- Kim et al., Attentive Illumination Decomposition Model for Multi-Illuminant White Balancing, CVPR 2024.
-- Recent multi-scale pixel-wise illuminant estimation work, 2025–2026.
-
-引用与 novelty 判断在正式论文写作前仍应逐篇回到原论文核验；本文用于指导下一阶段实验，不是 related-work 定稿。
+重点参考仍包括 LSMI (ICCV 2021)、One-Net multi-illuminant extension、Dual-Illumination Weighting and Estimation、PWCC (ICIP 2024) 及 illumination decomposition / multi-scale pixel-wise estimation 工作。正式论文写作前应逐篇核验 novelty 与实验协议。
