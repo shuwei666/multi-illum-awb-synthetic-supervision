@@ -1,0 +1,27 @@
+{
+  "status": "ready_for_final_evaluation",
+  "winner": "O",
+  "scores": {
+    "O": 0.8573986570311704,
+    "DG-C": 0.9150515595023583,
+    "DG-CS": 0.90027755987137
+  },
+  "freeze_manifest_sha256": "f4b6ffd2a5e04f067d894c240954d5be0f0757cbca24198e33325d013d086691",
+  "selected_at": 1790339639.0464015,
+  "dev_json_sha256": {
+    "O": "8e329b764cf93d117b6834283960dde363c73265aebfe81a0b0a706e4cfdd2d0",
+    "DG-C": "247fb9f76e6c523a833a4d1bdc603b61eda3cb8f4113caaa19c5992bb5c46a5f",
+    "DG-CS": "c407d6e30c86ae6d5cfeba455856a81b5a3af0203cd38334b40e7a308f415725"
+  },
+  "checkpoint_sha256": {
+    "O": "7670d875b96331df7e3c937748aee40d006e8147710ae77ad4962eabb7291351",
+    "DG-C": "e624e5cb7315624c4ddbb1fdae44f29e3e6482336ca6361d798afaed77726699",
+    "DG-CS": "1416a8edc22be3877d9044796405a720fd81ccf153313d4504f5a73646b9a75f"
+  },
+  "checkpoints": {
+    "O": "round3/runs/O_seed0/ckpt_final.pt",
+    "DG-C": "dg_matched/runs/DG-C_seed0/ckpt_final.pt",
+    "DG-CS": "dg_matched/runs/DG-CS_seed0/ckpt_final.pt"
+  },
+  "basis": "frozen development minimum; tie order O,DG-C,DG-CS; real scoring external"
+}
