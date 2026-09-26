@@ -11,6 +11,7 @@
     "producer_commit": "687357f00a4a606daadefe48d09fb2dd6de63629"
   },
   "specification": "GOAL_TASK.md",
+  "start_instructions": "START_GOAL.md",
   "new_this_request": ["KEEP_OLD_R", "SHAM_OLD_0", "NO_NEW_S"],
   "new_previous_request": ["ES10", "ES01"],
   "matched_controls": ["ES00", "ES11"],
@@ -43,13 +44,15 @@
   "label": "full_unweighted_mean_G1_E_on_16x16_then_L2",
   "common_exposure": "power_of_two_from_max_of_all_seven_inputs_and_historical_A_counterfactual; target 60000; multiply I,J not E",
   "rotation_grid": [256, 256],
-  "reference_implementation": "render_reference.py",
-  "reference_implementation_is_production_runner": false,
+  "reference_implementation": null,
+  "implementation_status": "NOT_INTEGRATED; local executor must implement from the normative formulas in GOAL_TASK.md",
+  "reference_code_delivery": "Chat-side reference Python upload was blocked by the tool. No reference Python or production runner is claimed present in this Git directory.",
   "reference_tests": {
-    "file": "test_render_reference.py",
+    "location": "chat_working_environment_only_not_this_repository",
     "scope": "synthetic_numpy_arithmetic_only",
     "tests_run": 12,
-    "result": "PASS"
+    "result": "PASS",
+    "is_production_calibration": false
   },
   "selection": "old_frozen_development_score_before_unified_real_evaluation",
   "performance_gate": "existing_18_cells_strictly_better_than_original_baseline_unchanged",
