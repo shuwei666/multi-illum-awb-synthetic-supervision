@@ -1,0 +1,30 @@
+{
+  "status": "PASS",
+  "freeze_manifest_sha256": "4886059347f1ddf4f9d9f285cc21cb8a2be9a47d948ec940d98a71e1365b7803",
+  "scope": "technical QC sufficient for limited downstream utility calibration only",
+  "source_evidence": [
+    {
+      "path": "reviews/qc_artifact_review.md",
+      "sha256": "9773e461b8a52c2c2035cb4b30be88f81c3fd461889a9a3042ee7a3caae391a4"
+    },
+    {
+      "path": "qc_summary.json",
+      "sha256": "0981dcfcf95c0731518abc772232b24371357c7610833a3193d1dab8db2c451d"
+    },
+    {
+      "path": "prior_runtime.json",
+      "sha256": "e90c4a130df73e74eca8102efbb76116ba658cc48404378427aa4d3d1d6c37d7"
+    },
+    {
+      "path": "qc_code_002.py",
+      "sha256": "8f6a6c6d2ab4aaa3ff8f63feb029838b19fb18e881889c1e1a87f7675597304f"
+    },
+    {
+      "path": "priors_manifest.json",
+      "sha256": "565ddb655741922a3ef4db5d5eb4288c5b47b8c517fdee832d7f1da02ee401e2"
+    }
+  ],
+  "physical_validation": "NOT_PERFORMED",
+  "dark_noise_assurance": "NOT_ESTABLISHED",
+  "boundaries": "Prior reviewer actually viewed all24; this decision reuses its unchanged evidence. Texture leakage, non-Lambertian regions, domain approximation and unknown external-data overlap remain."
+}

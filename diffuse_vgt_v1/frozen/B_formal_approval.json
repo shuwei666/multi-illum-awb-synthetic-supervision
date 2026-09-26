@@ -1,0 +1,42 @@
+{
+  "scope": "formal",
+  "arm": "B",
+  "freeze_manifest_sha256": "4886059347f1ddf4f9d9f285cc21cb8a2be9a47d948ec940d98a71e1365b7803",
+  "code_hashes": {
+    "round2.py": "cf33578d9e8f54b390174fefae065cbf346e075ce626ec5f55fbd255245c55d8",
+    "train_single_source.py": "c08c44278e21b32d31901d172236cac2aaf82e0cb8982937b509287fef326c61",
+    "evaluate_frozen.py": "d465a13a2fad6d27e1004b852073fd5dbc798e43e81ed6f042b4abda740fb608",
+    "domislovic_v2.py": "6eb3fbc37fadcebbdcc2b7565ca8ba215f075021abcee900bfeb28c279cc52a9",
+    "round3.py": "a1fced37821582d9656778f2891cc7f41b56a795e008ebd165974de644b61ac3",
+    "round3_synthesis.py": "2a9fe2e78d7b23af83242e216117ac3534a98e7ca4f472b3414e087b45ac309f",
+    "launch_round3.py": "a64d4efd812c966f52276faafb45b0312d87a9618ed434c232bf60c666230ed6",
+    "dg_experiment.py": "1a60bdfe0f17c0341d918973266c1baa86ca06b2d1f1dc41dff72e14415ed5a4",
+    "dg_synthesis.py": "5b736f4728a5d05cabb57dc998d074a4254ef19b56a7f951779bc14f45216d50",
+    "dg_fields.py": "bbd13bca0f4813debffb53b66df212de837cb52979ea2f91bf6fd2ba1f53b4e4",
+    "train_arms.py": "6e4f3658c8ff2c2b1df06d36b093c0f52c23c5a78dedaccb280f386e501cf40a",
+    "diffuse_synthesis.py": "74752e9308044ca34a9b45b9f2b52068d65dab44fc6c3d3ef6a0d5b0aa62e340",
+    "render_diffuse.py": "b1c5514311ceb7ef4278a922ad33512272682801a04c43f1b5fb68f2c2e478a4",
+    "cache_priors.py": "2887970af598093412c3bcbc7d2be77859cd5dd8fd1fece6fbea048d8c3505f6"
+  },
+  "real24_qc": {
+    "path": "reviews/real24_freeze_bound.json",
+    "sha256": "bd4582412f04aac8d46fd95ace64351a15c0fa18badc6b0467ef2363f41bcff6"
+  },
+  "matched_preflight": {
+    "path": "preflight_001.json",
+    "sha256": "568e595204939a8e54414d56151bf529aa97fa0e6575a82476350485d9e5e54a"
+  },
+  "input_sensitivity": {
+    "path": "reviews/input_signal_freeze_bound.json",
+    "sha256": "9ab5f2e7d6e1d51c1cf866c651252a51763a58f3a7a1b9e9e36c40d0241f2878"
+  },
+  "status": "ADEQUATE",
+  "calibration": {
+    "path": "calibration/attempt_001/B/completion.json",
+    "sha256": "d5139d45b06ea5e792a8de84383a93a47d140b5a3b9b7dc32f2ef148b09ca0dc"
+  },
+  "independent_review": {
+    "path": "reviews/B_formal_review.json",
+    "sha256": "0871795350c4dc6036f72be7e4f82932ee03fe8e8f927d851c7fa84696c97b18"
+  }
+}

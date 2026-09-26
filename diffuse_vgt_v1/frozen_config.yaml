@@ -1,0 +1,57 @@
+schema_version: 1
+batch: diffuse_vgt_v1
+freeze_manifest_sha256: 4886059347f1ddf4f9d9f285cc21cb8a2be9a47d948ec940d98a71e1365b7803
+authoritative_configuration: frozen/manifest.json
+seed: 0
+arms: [A, B, C]
+successful_updates_per_arm: 69600
+cycles_per_arm: 417
+full_cycle_updates: 167
+last_cycle_updates: 128
+source_count: 668
+allowed_train_endpoint_count: 1353
+source_images: Nikon_train_single_illuminant_only
+real_mixed_images_or_dense_gt_for_construction: false
+consumer: inherited_modified_OneNet_42179_parameters
+initialization: identical_frozen_random_weights_fresh_AdamW
+original_branch_fraction: 0.5
+mixed_branch_fraction: 0.5
+geometry_patch_and_endpoint_sampling: inherited_O_generators
+new_lamp_rng: dedicated_stream
+shading:
+  prior: Intrinsic_paper_weights_gray_stage
+  inverse_decode: 1_div_clip_D_0.001_1_minus_1
+  normalization: finite_positive_nonblack_valid_median
+  limits: [0.25, 4.0]
+normal:
+  prior: DSINE_exp001_cvpr2024
+  coordinates: right_down_front_positive_Z
+  approximate_fov_degrees: 60
+lamps:
+  count: 2
+  eta: 0.1
+  azimuth: uniform_0_2pi
+  cos_theta: uniform_cos70_1
+  relative_stops: uniform_minus1_plus1
+  powers: [2_pow_r_over_2, 2_pow_minus_r_over_2]
+  endpoint_chroma: G_equals_1
+  total_intensity_normalization: entire_training_grid_median
+rendering:
+  A: W_times_H
+  B: W_div_s0_times_H
+  C: W_div_s0_times_rot180_H
+  E: H_div_H_G
+  J: respective_base_times_H_G
+  inherited_W_storage_divisor: 4
+  common_counterfactual_half_storage_target: 60000
+  clipping_RGB: false
+labels:
+  patch_size: 16
+  reduction: unmasked_full_patch_mean_of_G1_E_then_L2
+  technical_mask: local_shading_and_local_normal_and_rot180_normal_support
+  fill: finite_context_only_not_valid_supervision
+development: inherited_real_single_plus_four_synthetic_sets
+candidate_order: [O, A, B, C]
+real_evaluation: after_frozen_development_selection_and_independent_approval
+physical_relighting_validation: NOT_PERFORMED
+photometry_lineage: inherited_unverified_assumption_accepted_by_user

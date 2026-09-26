@@ -1,0 +1,28 @@
+{
+  "status": "PASS",
+  "freeze_manifest_sha256": "4886059347f1ddf4f9d9f285cc21cb8a2be9a47d948ec940d98a71e1365b7803",
+  "scope": "parent preprocessing retains global color signal; not trained accuracy",
+  "source_evidence": [
+    {
+      "path": "input_signal.json",
+      "sha256": "716bbe646ee59469c6493dfd432648fe6638215a0aa6c67bb79dcdbc5990e8e1"
+    },
+    {
+      "path": "check_input_signal.py",
+      "sha256": "f81dd42cd4538faf971858d5ed0301adbdc355755a4b8a34b693ecfd4dde7a02"
+    }
+  ],
+  "measured": {
+    "source": "Place0",
+    "image_rms": 0.9617907404899597,
+    "patch_rms": 1.3939834833145142,
+    "normalization": "one scalar mean/std across C,H,W per sample",
+    "scope": "actual parent preprocessing sensitivity, not trained network accuracy"
+  },
+  "independently_reexecuted": false,
+  "corroboration": {
+    "path": "preflight_001.json",
+    "sha256": "568e595204939a8e54414d56151bf529aa97fa0e6575a82476350485d9e5e54a"
+  },
+  "physical_validation": "NOT_PERFORMED"
+}

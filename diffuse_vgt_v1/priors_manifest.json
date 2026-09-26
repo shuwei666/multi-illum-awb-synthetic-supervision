@@ -1,0 +1,162 @@
+{
+  "repos": {
+    "Intrinsic": {
+      "commit": "1a93aafaaf7dbe11be7ec86323d9a06e5950966d",
+      "python_files": {
+        "setup.py": "ac6b75f9ff3058eb20ee0a4a3971b33f172770e395f2b74cb12eac0c4ed0cd6e",
+        "intrinsic/decompose.py": "8c337184be3cb2b89e8c05e7087904708efcdaaccac0ebe363abf18cb7b6a20b",
+        "intrinsic/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "intrinsic/pipeline.py": "80b3500dd2f6b805b4d0cb02039b4b9d1a8d564233319abd0939611bacb58ac4",
+        "intrinsic/ordinal_util.py": "e73527ffb16e87897e2520b5ba6c8ed8b6d9d0e25c5219ed0526f93e676ac58a"
+      }
+    },
+    "chrislib": {
+      "commit": "9a4c63f5fc5e7bbe62288f2777c527b706eb04d0",
+      "python_files": {
+        "setup.py": "18f3f02916f7dc2dde63db23c24ac84521f480a54702291e62610115679722e3",
+        "tests/test_MSGLoss.py": "4aba4b31585ddd2b5fa11b5c98df7c26434f277c1798c593d957ef735bf9aafd",
+        "docs/conf.py": "8c9f888799a4274ef6f8bd5bdee606f51579c38e79b9a13586aeaf6dbad53d5b",
+        "chrislib/normal_util.py": "af028f8347901dba791ea79e9909116897f423ff467a31b1441387d9bc04a733",
+        "chrislib/metrics.py": "130c72b4cb0a1b345fe37399a7742aeecd085b6fd69918cf40521438da182264",
+        "chrislib/depth_util.py": "fffbacb62ba8c4309b8b459f67cee99f32fbba436d36cce801b5217d222e65f1",
+        "chrislib/methods.py": "8f819ad9b87d648e87c5e306999e3f585c0501a222387af46d318d8322d904a4",
+        "chrislib/data_util.py": "39ea4737c4a8748c8dd3d255b0109fb938ab1300736d6da07e8422f56a66333c",
+        "chrislib/color_util.py": "b06c51ec157e50bde74097ffe484d61dcb6e9bdcd064deefc4671a44b9ab4384",
+        "chrislib/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "chrislib/gan_loss.py": "aa7eb90bedf5abc872d6bfc8cbd155ffea985af2e68ff016c49047791e85430c",
+        "chrislib/resolution_util.py": "7aaf00a7aa0ad307e7026efa6ab9c45b43b8e2a540de9648ed37e607608ffa1c",
+        "chrislib/loss.py": "638319a2f9963fd079b71a305a62d55a080b1abdd8c9b8d489e8929b00701c82",
+        "chrislib/sh_util.py": "67cd840ce1d4827d01834929b9f2c783a3b510c0695c8edb10ecb4aea9a0de8d",
+        "chrislib/midas_loss.py": "c28441f70cc16e305e6ebf0b620ed603853b17192e73131eb5c770275a13d69b",
+        "chrislib/general.py": "ac8ed0e972ca998f64a330f1c8a33efdf4ff0ad84b97f8f0d62acbd943149adc"
+      }
+    },
+    "MiDaS": {
+      "commit": "fb51e3af860d9430e9aaeb1d30edd3b6e2ac0538",
+      "python_files": {
+        "run.py": "42584f9e262af00d7eac02159b9a0f08b4f1965792492da54ea72dfa215b352c",
+        "setup.py": "534b444de0aebc23e627c35b98b704b23f0874d897553b2541e40b38c57e957d",
+        "utils.py": "885df3ee92c380a25a27626bed9ef0982bc6ff7fb24c7bca671a76af4c50f3fa",
+        "hubconf.py": "16de87e88e765ec3b334dacf21ae21980f0ad1af262159e0bdafbb92aeb54f2a",
+        "ros/midas_cpp/scripts/talker.py": "c0a742f0b6846b81bf400ab108e104ea135073f7f11ecdbcc98a593e55ee0e2f",
+        "ros/midas_cpp/scripts/listener_original.py": "6fcb59ab0a03685cba10c2018f62faac0c0dc2c2cd621c5dca148c72f85b50f8",
+        "ros/midas_cpp/scripts/listener.py": "c003c9d547d9d35a57000fde370ed79ef6db079c5e2cb37b66b0a59719fc4ce6",
+        "altered_midas/midas_net_custom.py": "b2d6b7e3498cd3b456d1a61f725188a6f9a5a8c62b16eb69edfd09bc3e69a4ac",
+        "altered_midas/transforms.py": "ab3d20b77065606332e6a9bac96a44f60f22923a7848d62b57b5690959a9883d",
+        "altered_midas/midas_net.py": "7e586d6f97029ece4f3381ca0f8fe460b4e2805b65c3a3deb02f98e4e3b11fc0",
+        "altered_midas/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "altered_midas/dpt_depth.py": "234b3bcee35257709c25c016d28fcd17f27c9eea57ad959fde12b986b1f6f7ec",
+        "altered_midas/base_model.py": "a50dc79482afbcd023a3c401d17d21e5f8b5c0c51c9060ef849a75bd1816496b",
+        "altered_midas/model_loader.py": "a280a19133b96e6693cb5c0aeec8fd23a9345e07722ffb05d4a163df28ff97de",
+        "altered_midas/blocks.py": "f2fb6bb8447f0b06bd5b105b857a5f3fcdafd6ed96c3903a57aeb041846cd91f",
+        "altered_midas/backbones/beit.py": "ce7eaeeefcfd9dddee6658832b820106603b9a5cab37494fd2ece14fd62597bb",
+        "altered_midas/backbones/next_vit.py": "c2f36cbdb5cafe52cadf8ff1942a85248aa604405d72e799dc983d611243312f",
+        "altered_midas/backbones/swin.py": "119d9f10015e5041f18ac701afad34df7af422eeb3130eb91f6ee6ebf0ad5d52",
+        "altered_midas/backbones/levit.py": "782e6be3915981ba24348dd76c693fc14ee602f39c4d7ca7a034d52d4a02d613",
+        "altered_midas/backbones/__init__.py": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+        "altered_midas/backbones/swin_common.py": "e27fd6380172ed343c103a5ae55b875163b33984a460848aa2d28bf2ea6cb2e0",
+        "altered_midas/backbones/vit.py": "67ec52b3d9a8e7836c6bc4dba0e8777adcd2964687f30bfd02b423b6ace4c477",
+        "altered_midas/backbones/utils.py": "d3d4f1adebcefd0b18cba7d53a237c5ff4238e477197dbbb44d5c92e8e301cfb",
+        "altered_midas/backbones/swin2.py": "a0168fc93f31e47f641fa9554938011de3e6500a45e94d8cf2d3f470308c6a46",
+        "mobile/android/models/src/main/assets/run_tflite.py": "aa40f3fe79e9e62340a2dded2f95804696b02dffa8afff84285010b49141f6fc",
+        "tf/transforms.py": "ab3d20b77065606332e6a9bac96a44f60f22923a7848d62b57b5690959a9883d",
+        "tf/make_onnx_model.py": "8a5ce191db28fe316651da6af403011e0b4400ce9c486b085ad7bc5a53c0a631",
+        "tf/run_onnx.py": "5af900bfb2b8f6d93acb7d6edd64caf9a00544e61fe26bcd9b1c28108daf7182",
+        "tf/utils.py": "ba997e313dadd54954cff3f7e9944abae2e1de46d1e7067c3f9e0078ae894e0f",
+        "tf/run_pb.py": "e744d6c90563ba16ba92673dac0dd332245fe4125f1d8bb50dba80199968e377"
+      }
+    },
+    "DSINE": {
+      "commit": "ef0c2afa32b4dd19cb8ca4567c652802cd92591c",
+      "python_files": {
+        "hubconf.py": "f76fb97415a35d5984941816af485e3266ea610bebb75a1d607fbea9749d0c0b",
+        "projects/__init__.py": "f03f2b89c0da4ace02dad85c8f566159daf6117247dad11561c7cbc6cf85932f",
+        "projects/baseline_normal/config.py": "4eabf4638c85dbf5d88a95964ec9cac1ec8c5efa6f9929e12bca05c2388c5a55",
+        "projects/baseline_normal/test.py": "1af2c2276c4d933618b6409bbe84023a618cd463a22656c2e0f83bc9ccf2aed5",
+        "projects/baseline_normal/model.py": "41d09a742c5bc671c879cb50cd671de99b0ad08c4544952dc54362e8f54e3ad2",
+        "projects/baseline_normal/train.py": "972da30b796d42da9e5d12da5037fc032ff64d25081d4b8e444b2999a2ef7e10",
+        "projects/baseline_normal/losses.py": "4dd735c782ee5910cd2509097f59cc967c0f416b1363718a6a86419045dacab3",
+        "projects/baseline_normal/dataloader.py": "5c1ca7f56f627952166eeb266a54425445f5120bb7df1ade32e39a6ded07fd1a",
+        "projects/dsine/config.py": "f3da09571b45be53b58e6e8e15914330c5bcc7ca9eadad3afa42954317e5b926",
+        "projects/dsine/test.py": "aedf67aa92850ec71394f28377aa9d1170a4998cb95aaa1cd0e86925739a0c4e",
+        "projects/dsine/test_minimal.py": "e7dc5c67a1fd229165ca1085cd6c0ac84a1a88fbea05273d742cf7d82732975f",
+        "projects/dsine/train.py": "83dae4096e86923882096e73c90396347c1bce95dd76740180a430cbdf812a17",
+        "projects/dsine/losses.py": "2b4b22e2bcda1789a07f3f1b39a22d5becd66ac23ee7439e4ccf62a625601fcd",
+        "utils/visualize.py": "6c6f2ac1ea72bae65e4a360d1d0ff32b33ca38f1fadb62e5f68efc2de1c7f1c7",
+        "utils/demo_data.py": "d04c85077232d78701bc777f51675d071c0fb12976f6091b3e331aeede11b2fa",
+        "utils/utils.py": "69c0e5ae09b41d070f301b86037af7c71b2464ceca41b63d728e5e93f530a973",
+        "utils/projection.py": "7581218060317ca52b13a045984d6c4b4c60d9933e8dbcc4bba27543d6f0f488",
+        "utils/rotation.py": "c2b012204fd1f1efa04d2a9b04a55634fa53a35a8e811df2dc680df7799d3c94",
+        "utils/d2n/plane_svd.py": "72df0f0bd68b425d9d9206ec34b77daa7723e17a8923374de66b5115f8885c5c",
+        "utils/d2n/cross.py": "87a30a1db3ffb599c8fc8e86add12608566ec11fb8ad1eaa5a8bec6eb49a1085",
+        "models/conv_encoder_decoder/submodules.py": "1d174f519d805026a28f2e36331fd674bab63d6b1a18e639f1e3249693ba6c7d",
+        "models/conv_encoder_decoder/seg_models.py": "6c2501c37bd36d3f14fa4078e5c4ca4b65d21b5add5795f08431e1634ac5ed66",
+        "models/conv_encoder_decoder/unet.py": "95c50407ec098c81b481ccff8071077295d9e3944cdfd0c12aa8c3ae2a362221",
+        "models/conv_encoder_decoder/__init__.py": "89f87247d1f4aedaf595b09087ae887eac3f53bca09a846d6b25d27195e84a87",
+        "models/conv_encoder_decoder/dense_depth.py": "0b26575076a2437a80d382b4863347a66fbc133904e8fcc64ed25113a03f3b11",
+        "models/dsine/v00.py": "7f62d49a4ae1f6275d486b4fef9c30a69c639efc4685725ef61eef82f917c73a",
+        "models/dsine/v02_kappa.py": "4b0741a02f3d10cb89fb4739e1b72ef1f2031f736dd8f3ce382a6dfacf10eb81",
+        "models/dsine/v01.py": "c1f11936ea5eea718f79b77a8cade6f7081be1d718348c78357385581c292266",
+        "models/dsine/submodules.py": "44eafd61b1488125730d2e228188f5022038b3d5c55cdff7d5bb226c1c57240d",
+        "models/dsine/v02.py": "14e99e2769c63b209ddf9a25096f2481a08a81c0196f2a8a8bac80454e125ffb",
+        "data/__init__.py": "1f25dc1a5a16c15d9419ee12b25a2d95799d6b4e48f7acd9152c38b9cdfe8381",
+        "data/datasets/oasis/__init__.py": "85eece103996671b5565d2c03af2d8a64d6bd0a7e9ba2621551f08d15f28b714",
+        "data/datasets/ibims/__init__.py": "e37403a10b9f00b8976abfa2adb5ff39d08b54e76f39f036ea259458a867ea1d",
+        "data/datasets/nyuv2/__init__.py": "f04589be71645fad914ae2ed7aa8ecc8f4952ed0cae4b24d34caa7a7f5e322b5",
+        "data/datasets/vkitti/__init__.py": "9c973a504c450b708c406aa4522aab8e77ea40c053d7c59b5162fa40e9d37dd5",
+        "data/datasets/sintel/__init__.py": "76a72f534d83266f183483fc69075eabdfe12fe267fa19166919b2554971e344",
+        "data/datasets/scannet/__init__.py": "6172528156e597e21da7354e21024eb7ccf09bd2acaab6ddbe43cf48316d33ed",
+        "data/augmentations/perspective.py": "58245e06e295fa91ff824f3612e68eb105e1564883c0a12bb68de701b7f939dd",
+        "data/augmentations/__init__.py": "f75a038462036d0a92dd8826a825fca62b8c8c26fafc75b476a3dad527882729",
+        "data/augmentations/basic.py": "97fccfcd5620693629ca28416385f01e1b48a7c92c81105f59a815a12f7f51e0",
+        "data/augmentations/appearance.py": "1d935293cb1455d8df306c219191975694e8d8b00e81fedd6a4ac0afa6e8d6e3"
+      }
+    }
+  },
+  "weights": {
+    "intrinsic_final_weights.pt": {
+      "sha256": "daeeb1e9aa9bcd65a3357e22c54344099fb9adb852541b89d06926db3a518001",
+      "bytes": 508255249
+    },
+    "dsine_exp001.pt": {
+      "sha256": "629472c66ea9ec83bab6ba7c957ad7d983bb9c91063a54ad74ff5b8229cbf22f",
+      "bytes": 291298581
+    }
+  },
+  "sources": {
+    "intrinsic": "https://github.com/compphoto/Intrinsic/releases/download/v1.0/final_weights.pt",
+    "dsine": "https://drive.google.com/file/d/1Wyiei4a-lVM6izjTNoBLIC5-Rcy4jnaC/view"
+  },
+  "licenses": {
+    "Intrinsic": "academic-only custom",
+    "DSINE": "Imperial academic/noncommercial custom",
+    "MiDaS": "MIT",
+    "chrislib": "no LICENSE in frozen snapshot; no redistribution claim"
+  },
+  "external_training_sources": {
+    "Intrinsic": [
+      "CGIntrinsics",
+      "OpenRooms",
+      "Hypersim",
+      "GTA",
+      "MID-Intrinsics (Murmann)"
+    ],
+    "DSINE": [
+      "Cleargrasp",
+      "3D Ken Burns",
+      "Hypersim",
+      "SAIL-VOS 3D",
+      "TartanAir",
+      "MVS-Synth",
+      "BlendedMVG",
+      "Taskonomy",
+      "Replica",
+      "Replica+GSO",
+      "EfficientNet pretraining"
+    ]
+  },
+  "nikon_overlap": "UNKNOWN; not independently audited",
+  "domain": "Globally scaled camera-linear proxy; no verified camera-to-sRGB matrix. DSINE receives sRGB transfer-encoded camera RGB, not colorimetric sRGB.",
+  "backend_adapters": "No vendor edits. Temporary WSL constructor->torchvision resnext101_32x8d and lite3->geffnet, full strict checkpoint loading required. No claim of separately proven forward equivalence.",
+  "source_manifest_sha256": "107377500af89fc67a95a9f8095a92826957057880e2f0371baff81980c96924"
+}

@@ -1,0 +1,19 @@
+{
+  "scope": "Current implementation tests; not performance or physical validation",
+  "recorded_at_utc": "2026-09-26T02:36:59Z",
+  "report_mock_rechecked_at_utc": "2026-09-26T03:37:18Z",
+  "freeze_manifest_sha256": "4886059347f1ddf4f9d9f285cc21cb8a2be9a47d948ec940d98a71e1365b7803",
+  "tests_run": 45,
+  "failures": 0,
+  "errors": 0,
+  "passed": true,
+  "suites": {
+    "remote_cpu_implementation": {"tests": 39, "seconds": 1.627, "command": "python -m unittest discover -s tests -v", "environment": "CUDA_VISIBLE_DEVICES empty; OMP/MKL threads 2", "log": "unit_tests_current.log"},
+    "local_report_mock": {"tests": 6, "seconds": 0.418, "command": "python3 -m unittest discover -s tests -p test_build_report.py -v", "scope": "Temporary mock reports only; includes consumption accounting and history/CSV integrity gates; passing tests do NOT override independent privacy failure", "implementation_sha256": "96a3a3eb755239621b5769d5f17590304a979387bb1681ea41b29310365773c9"}
+  },
+  "actual_gpu_pipeline": "preflight_001.json",
+  "actual_six_fresh_calibration_updates": "reviews/formal_entry_review.md",
+  "historical_stage0": "stage0_test_report.json",
+  "formal_training_state": "All A/B/C completed and real evaluation exited0; independent final metrics audit PASS/ADEQUATE, performance FINAL_TARGET_NOT_MET",
+  "report_tool_independent_verdict": "FAIL twice for incomplete private-host filtering; repair loop stopped and public export held; see reviews/report_tool_repair_review.md"
+}

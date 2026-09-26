@@ -1,0 +1,16 @@
+{
+  "versions": {
+    "torch": "2.3.0+cu121",
+    "torchvision": "0.18.0+cu121",
+    "numpy": "1.26.4",
+    "geffnet": "1.0.2",
+    "timm": "0.6.13",
+    "scipy": "1.13.1",
+    "scikit-image": "0.24.0",
+    "kornia": "0.7.3"
+  },
+  "strict_load_all_models": true,
+  "priors_manifest_sha256": "565ddb655741922a3ef4db5d5eb4288c5b47b8c517fdee832d7f1da02ee401e2",
+  "cache_code_sha256": "2887970af598093412c3bcbc7d2be77859cd5dd8fd1fece6fbea048d8c3505f6",
+  "adapter_equivalence": "Key/shape strict coverage only; forward equivalence not independently proven"
+}

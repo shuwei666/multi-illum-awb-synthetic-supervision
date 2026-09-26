@@ -1,0 +1,72 @@
+{
+  "status": "frozen",
+  "seed": 0,
+  "steps": 69600,
+  "arms": [
+    "A",
+    "B",
+    "C"
+  ],
+  "config": {
+    "original_half": true,
+    "bias": false,
+    "endpoints": "full"
+  },
+  "code_hashes": {
+    "round2.py": "cf33578d9e8f54b390174fefae065cbf346e075ce626ec5f55fbd255245c55d8",
+    "train_single_source.py": "c08c44278e21b32d31901d172236cac2aaf82e0cb8982937b509287fef326c61",
+    "evaluate_frozen.py": "d465a13a2fad6d27e1004b852073fd5dbc798e43e81ed6f042b4abda740fb608",
+    "domislovic_v2.py": "6eb3fbc37fadcebbdcc2b7565ca8ba215f075021abcee900bfeb28c279cc52a9",
+    "round3.py": "a1fced37821582d9656778f2891cc7f41b56a795e008ebd165974de644b61ac3",
+    "round3_synthesis.py": "2a9fe2e78d7b23af83242e216117ac3534a98e7ca4f472b3414e087b45ac309f",
+    "launch_round3.py": "a64d4efd812c966f52276faafb45b0312d87a9618ed434c232bf60c666230ed6",
+    "dg_experiment.py": "1a60bdfe0f17c0341d918973266c1baa86ca06b2d1f1dc41dff72e14415ed5a4",
+    "dg_synthesis.py": "5b736f4728a5d05cabb57dc998d074a4254ef19b56a7f951779bc14f45216d50",
+    "dg_fields.py": "bbd13bca0f4813debffb53b66df212de837cb52979ea2f91bf6fd2ba1f53b4e4",
+    "train_arms.py": "6e4f3658c8ff2c2b1df06d36b093c0f52c23c5a78dedaccb280f386e501cf40a",
+    "diffuse_synthesis.py": "74752e9308044ca34a9b45b9f2b52068d65dab44fc6c3d3ef6a0d5b0aa62e340",
+    "render_diffuse.py": "b1c5514311ceb7ef4278a922ad33512272682801a04c43f1b5fb68f2c2e478a4",
+    "cache_priors.py": "2887970af598093412c3bcbc7d2be77859cd5dd8fd1fece6fbea048d8c3505f6"
+  },
+  "assets": {
+    "diffuse_vgt_v1/USER_TASK.txt": "7488b5be071894e25144554ffee225188872e5656270b42eba501f699942424f",
+    "diffuse_vgt_v1/REVISION_1.md": "ad6b4f6da46b2a8ed72a548320a09d5a4ff85a71c8b334097e564e2f6325a176",
+    "diffuse_vgt_v1/source_manifest.json": "107377500af89fc67a95a9f8095a92826957057880e2f0371baff81980c96924",
+    "diffuse_vgt_v1/cache_manifest.json": "807bf9573ecd5cef4d01e5e96502461797f242dcd20023a8b54af4106cc00ae0",
+    "diffuse_vgt_v1/priors_manifest.json": "565ddb655741922a3ef4db5d5eb4288c5b47b8c517fdee832d7f1da02ee401e2",
+    "diffuse_vgt_v1/source_access_policy.json": "365d4b7607be5206fa697bc58c50807f07bd8b7fb32e65bdf4067a6548005576",
+    "dg_matched/frozen/manifest.json": "f4b6ffd2a5e04f067d894c240954d5be0f0757cbca24198e33325d013d086691",
+    "dg_matched/frozen/initial_seed0.pt": "a81e752797ae353ce8e8081013405906f9d8975a6f5899c9150df2806033336a",
+    "dg_matched/frozen/sources.json": "b3f50f573bfeeab58b7e7faa9d884431a6cd3bdb0f945f35f6c3f6aaa0100bca",
+    "dg_matched/frozen/endpoint_manifest.json": "d86fd3418b35b097f9afdb182d6e99d83a6dcc43352faf577fc732d4f5333829",
+    "DG_MATCHED_PROTOCOL.md": "a1369f058640f05bd2d46b6a76cc2c0c0727c6f1f8bd1bd90bf010b74ae7ba77",
+    "DG_REVISION_1.md": "7ea8041af6f03f4550091d7c0252cbe087a15db29d664c453626aca17b1e51b8",
+    "round3/frozen/manifest.json": "ab21e83ce40c45ca6e6af1af2823128cdb4a9002b3de4675cb02e20e46c8c923",
+    "round3/frozen/sources.json": "b3f50f573bfeeab58b7e7faa9d884431a6cd3bdb0f945f35f6c3f6aaa0100bca",
+    "round3/frozen/endpoint_manifest.json": "d86fd3418b35b097f9afdb182d6e99d83a6dcc43352faf577fc732d4f5333829",
+    "round3/frozen/initial_seed0.pt": "a81e752797ae353ce8e8081013405906f9d8975a6f5899c9150df2806033336a",
+    "round3/final_selection.json": "bed54f28daf3f437cb605998700d5a15d82aace6ffdfbdd434f039f8db45c073",
+    "round3/dev_results/O_seed0.json": "8e329b764cf93d117b6834283960dde363c73265aebfe81a0b0a706e4cfdd2d0",
+    "round3/runs/O_seed0/ckpt_final.pt": "7670d875b96331df7e3c937748aee40d006e8147710ae77ad4962eabb7291351",
+    "round2/frozen_dev/manifest.json": "ab2209da8945488c61074c95fbd4f353fcdcdf30dde1a5d16edcba63fa8d731c",
+    "round2/dev_results/M.json": "8c594c8ad61d5759f1fd9f15f32cd89892272702facba368fb1226e39f74d04c",
+    "round2/frozen_dev/real_single.pt": "bbde0c5b5c56b15f49b9330afd65f352a966edd9b590a5a2bd4d2e6f36190bbe",
+    "round2/frozen_dev/global.pt": "81b1a77b65c409d16b0fdb6adf0202079a82583fd0dc3661f459818d6a3df36c",
+    "round2/frozen_dev/sigmoid.pt": "64e82e7e4444a4a03ceff8c5f0bf884eba22857277fac1da58f92720982a9ef0",
+    "round2/frozen_dev/blob.pt": "9db5396851a30f390a06878e32efea49d9a30fad77b69f7eaba4c693f88f6597",
+    "round2/frozen_dev/lowfreq.pt": "a5a8becdd6597c1389c03dcf11824c4f05c538c3a2d1700fa8bc877596fca452"
+  },
+  "copies": {
+    "initial_seed0.pt": "a81e752797ae353ce8e8081013405906f9d8975a6f5899c9150df2806033336a",
+    "sources.json": "b3f50f573bfeeab58b7e7faa9d884431a6cd3bdb0f945f35f6c3f6aaa0100bca",
+    "endpoint_manifest.json": "d86fd3418b35b097f9afdb182d6e99d83a6dcc43352faf577fc732d4f5333829"
+  },
+  "reference_means": {
+    "real_single": 2.042036771774292,
+    "global": 1.7935248613357544,
+    "sigmoid": 2.69146728515625,
+    "blob": 2.742579221725464,
+    "lowfreq": 2.6421144008636475
+  },
+  "created": 1790388335.9415522
+}

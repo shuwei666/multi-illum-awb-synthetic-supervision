@@ -1,0 +1,7 @@
+{
+  "source": "Place0",
+  "image_rms": 0.9617907404899597,
+  "patch_rms": 1.3939834833145142,
+  "normalization": "one scalar mean/std across C,H,W per sample",
+  "scope": "actual parent preprocessing sensitivity, not trained network accuracy"
+}

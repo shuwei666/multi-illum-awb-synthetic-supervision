@@ -1,0 +1,27 @@
+{
+  "python": "3.12.3",
+  "packages": {
+    "numpy": "1.26.4",
+    "torch": "2.3.0+cu121",
+    "torchvision": "0.18.0+cu121",
+    "scipy": "1.13.1",
+    "scikit-image": "0.24.0",
+    "imageio": "2.35.1",
+    "lazy-loader": "0.4",
+    "tifffile": "2024.8.30",
+    "kornia": "0.7.3",
+    "kornia-rs": "0.1.5",
+    "timm": "0.6.13",
+    "geffnet": "1.0.2",
+    "huggingface-hub": "0.24.7",
+    "safetensors": "0.4.5",
+    "einops": "0.8.0",
+    "antialiased-cnns": "0.3",
+    "opencv-python": null,
+    "Pillow": "10.3.0"
+  },
+  "torch_cuda": "12.1",
+  "cudnn": 8902,
+  "gpu": "Tesla V100S-PCIE-32GB, 580.65.06, 32768 MiB",
+  "boundary": "Effective versions; existing CUDA/PyTorch environment retained. Prior-only packages installed in task-local target."
+}

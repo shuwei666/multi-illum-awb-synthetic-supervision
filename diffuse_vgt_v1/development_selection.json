@@ -1,0 +1,74 @@
+{
+  "status": "development_selected_real_evaluation_not_run",
+  "winner": "O",
+  "scores": {
+    "O": 0.8573986570311704,
+    "A": 0.9253805212050032,
+    "B": 0.9655792014703064,
+    "C": 0.9614752020351813
+  },
+  "results": {
+    "O": {
+      "model": "O",
+      "seed": 0,
+      "checkpoint_sha256": "7670d875b96331df7e3c937748aee40d006e8147710ae77ad4962eabb7291351",
+      "means": {
+        "real_single": 1.2604235410690308,
+        "global": 1.9031167030334473,
+        "sigmoid": 2.921599864959717,
+        "blob": 3.0955817699432373,
+        "lowfreq": 2.945733070373535
+      },
+      "freeze_manifest_sha256": "ab21e83ce40c45ca6e6af1af2823128cdb4a9002b3de4675cb02e20e46c8c923",
+      "created": 1790316106.693407,
+      "score": 0.8573986570311704
+    },
+    "A": {
+      "means": {
+        "real_single": 1.2808669805526733,
+        "global": 1.8491690158843994,
+        "sigmoid": 3.1792025566101074,
+        "blob": 3.5657711029052734,
+        "lowfreq": 3.6504838466644287
+      },
+      "score": 0.9253805212050032,
+      "checkpoint_sha256": "b3613cd3385eff212e4beabbb6ad44b0b47435a26cfa564d1d21383c7402cf0d"
+    },
+    "B": {
+      "means": {
+        "real_single": 1.3360438346862793,
+        "global": 2.0485661029815674,
+        "sigmoid": 3.3419950008392334,
+        "blob": 3.6325743198394775,
+        "lowfreq": 3.6966915130615234
+      },
+      "score": 0.9655792014703064,
+      "checkpoint_sha256": "a9812e73d452e5f4ce8404a9497c0597abc09d5c3f4a8ea72ae33a3bbd83e893"
+    },
+    "C": {
+      "means": {
+        "real_single": 1.307713508605957,
+        "global": 2.079348564147949,
+        "sigmoid": 3.336125135421753,
+        "blob": 3.622471809387207,
+        "lowfreq": 3.726715564727783
+      },
+      "score": 0.9614752020351813,
+      "checkpoint_sha256": "c2a77eefc0f377942e899e9ac231420c1535227318a48cd06485b59786a59633"
+    }
+  },
+  "tie_order": [
+    "O",
+    "A",
+    "B",
+    "C"
+  ],
+  "selected_at": 1790393392.9745696,
+  "freeze_manifest_sha256": "4886059347f1ddf4f9d9f285cc21cb8a2be9a47d948ec940d98a71e1365b7803",
+  "checkpoint_sha256": {
+    "O": "7670d875b96331df7e3c937748aee40d006e8147710ae77ad4962eabb7291351",
+    "A": "b3613cd3385eff212e4beabbb6ad44b0b47435a26cfa564d1d21383c7402cf0d",
+    "B": "a9812e73d452e5f4ce8404a9497c0597abc09d5c3f4a8ea72ae33a3bbd83e893",
+    "C": "c2a77eefc0f377942e899e9ac231420c1535227318a48cd06485b59786a59633"
+  }
+}

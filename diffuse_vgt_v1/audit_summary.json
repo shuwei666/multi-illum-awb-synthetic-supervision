@@ -1,0 +1,16 @@
+{
+  "source_count": 668,
+  "endpoint_count": 1353,
+  "shapes": [
+    "[512, 512, 3]"
+  ],
+  "dtypes": [
+    "uint16"
+  ],
+  "pixel_range": [
+    0,
+    15520
+  ],
+  "status": "BLOCKED_INPUT_OR_PHOTOMETRY",
+  "formal_training_runs": 0
+}

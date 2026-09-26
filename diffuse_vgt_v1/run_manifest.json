@@ -1,0 +1,22 @@
+{
+  "batch": "diffuse_vgt_v1",
+  "status": "complete_numerically_verified_final_target_not_met",
+  "independent_metrics_review": "reviews/final_metrics_review.md",
+  "publication_status": "held_report_tool_privacy_check_failed_twice_user_notified",
+  "outcome": "FINAL_TARGET_NOT_MET",
+  "completed_arms": ["A", "B", "C"],
+  "current_arm": null,
+  "frozen_development_winner": "O",
+  "launched_at_utc": "2026-09-26T02:16:51Z",
+  "order": ["A", "B", "C"],
+  "seed": 0,
+  "successful_updates_per_arm": 69600,
+  "initialization": "frozen random initialization and fresh AdamW for every arm; never calibration weights",
+  "freeze_manifest_sha256": "4886059347f1ddf4f9d9f285cc21cb8a2be9a47d948ec940d98a71e1365b7803",
+  "entry_review": "reviews/formal_entry_review.md",
+  "completion_rule": "All three completion files and verified checkpoints, matched histories and endpoint ledgers; fixed development then independent real-evaluation gate",
+  "failure_rule": "Stop serial queue on any failed arm, preserve failure/history/recovery, no automatic resume",
+  "monitoring": "Current task watches heartbeat, failure and completion; queue then runs only frozen development, not real test",
+  "real_mixed_gt_access_for_construction": "none",
+  "physical_relighting_validation": "NOT_PERFORMED"
+}
