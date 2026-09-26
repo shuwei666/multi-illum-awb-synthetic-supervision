@@ -1,0 +1,181 @@
+{
+  "updated": "2026-09-26",
+  "agent": "codex",
+  "purpose": "Historical evidence for a conditional roadmap; no new scoring",
+  "metric_units": "degrees; lower is better",
+  "inputs": [
+    {
+      "batch": "round2",
+      "source_id": "diffuse_vgt_v1/repository/results/nikon_round2/summary.json",
+      "sha256": "725c4ecfe9ebbb3477edfb60acda817a4be4986a5fc4cf973b3e834af1cb9aef"
+    },
+    {
+      "batch": "round3",
+      "source_id": "diffuse_vgt_v1/repository/results/nikon_round3/summary.json",
+      "sha256": "92952bb40e31cd46ff4799e807cc00c3b5add6e6974f84f0b1023c049ab605bb"
+    },
+    {
+      "batch": "dg",
+      "source_id": "diffuse_vgt_v1/repository/results/nikon_dg_matched/summary.json",
+      "sha256": "24e6c8219fc8b16d6eccc6d1b511b49bf3a593bac5f7bb26fe819bd042b963f1"
+    },
+    {
+      "batch": "abc",
+      "source_id": "diffuse_vgt_v1/results/summary.json",
+      "sha256": "d2f72d42dbe50941062ea38ddf3f3866d4d650836a7cd0edda05206efcc7fc36"
+    },
+    {
+      "batch": "lowfreq",
+      "source_id": "diffuse_vgt_v1/lowfreq_pair_real_results/summary.json",
+      "sha256": "3f0cd8423d247ecc45848de1bd4966429cfc4ebc5947d22cc54aa4ad18cb1fad"
+    },
+    {
+      "batch": "pair",
+      "source_id": "pair_m/strict_comparison_001.json",
+      "sha256": "7c4bbeb4deb71d43f75e5dda00bda837d6ed7266bd78b40735487ff3ae22c262"
+    },
+    {
+      "batch": "pair_gaussian",
+      "source_id": "pair_gaussian/strict_comparison_001.json",
+      "sha256": "7b466c1d3bcfe82eed7bc536075c5c82949e50b102984130e4757c0854cdc124"
+    }
+  ],
+  "rows": [
+    {
+      "batch": "round2",
+      "model": "M",
+      "metrics": {
+        "test/all/patch_pooled": 2.725795129621831,
+        "test/all/patch_image_balanced": 2.725795129621831,
+        "test/all/pixel_image_balanced": 2.824945043392804,
+        "test/single/patch_pooled": 2.002994181276401,
+        "test/single/patch_image_balanced": 2.002994181276401,
+        "test/single/pixel_image_balanced": 2.0030583325546725,
+        "test/multi/patch_pooled": 3.3810445874676875,
+        "test/multi/patch_image_balanced": 3.3810445874676875,
+        "test/multi/pixel_image_balanced": 3.570019912096532
+      }
+    },
+    {
+      "batch": "round3",
+      "model": "baseline",
+      "metrics": {
+        "test/all/patch_pooled": 1.9692417243970304,
+        "test/all/patch_image_balanced": 1.9692417243970304,
+        "test/all/pixel_image_balanced": 2.1671289093194748,
+        "test/single/patch_pooled": 1.3465057009695753,
+        "test/single/patch_image_balanced": 1.3465057009695753,
+        "test/single/pixel_image_balanced": 1.3465772262103686,
+        "test/multi/patch_pooled": 2.5337781194667794,
+        "test/multi/patch_image_balanced": 2.5337781194667794,
+        "test/multi/pixel_image_balanced": 2.9109935192408134
+      }
+    },
+    {
+      "batch": "round3",
+      "model": "O",
+      "metrics": {
+        "test/all/patch_pooled": 2.4238576383274504,
+        "test/all/patch_image_balanced": 2.4238576383274504,
+        "test/all/pixel_image_balanced": 2.5378864060742408,
+        "test/single/patch_pooled": 1.5207020019352995,
+        "test/single/patch_image_balanced": 1.5207020019352995,
+        "test/single/pixel_image_balanced": 1.5207788399969573,
+        "test/multi/patch_pooled": 3.2426062058979044,
+        "test/multi/patch_image_balanced": 3.2426062058979044,
+        "test/multi/pixel_image_balanced": 3.4599371902751415
+      }
+    },
+    {
+      "batch": "dg",
+      "model": "DG-CS",
+      "metrics": {
+        "test/all/patch_pooled": 2.46090937611909,
+        "test/all/patch_image_balanced": 2.46090937611909,
+        "test/all/pixel_image_balanced": 2.5879547828929637,
+        "test/single/patch_pooled": 1.6870815021752652,
+        "test/single/patch_image_balanced": 1.6870815021752652,
+        "test/single/pixel_image_balanced": 1.6871425378599167,
+        "test/multi/patch_pooled": 3.1624168880120904,
+        "test/multi/patch_image_balanced": 3.1624168880120904,
+        "test/multi/pixel_image_balanced": 3.4045789676425477
+      }
+    },
+    {
+      "batch": "abc",
+      "model": "C",
+      "metrics": {
+        "test/all/patch_pooled": 2.345680527507605,
+        "test/all/patch_image_balanced": 2.345680527507605,
+        "test/all/pixel_image_balanced": 2.472963674597706,
+        "test/single/patch_pooled": 1.4866785563896987,
+        "test/single/patch_image_balanced": 1.4866785563896987,
+        "test/single/pixel_image_balanced": 1.486781046075546,
+        "test/multi/patch_pooled": 3.1244019405771084,
+        "test/multi/patch_image_balanced": 3.1244019405771084,
+        "test/multi/pixel_image_balanced": 3.366979702323403
+      }
+    },
+    {
+      "batch": "lowfreq",
+      "model": "full",
+      "metrics": {
+        "test/all/patch_pooled": 2.36849326572776,
+        "test/all/patch_image_balanced": 2.36849326572776,
+        "test/all/pixel_image_balanced": 2.4953993718141687,
+        "test/single/patch_pooled": 1.5096112017176377,
+        "test/single/patch_image_balanced": 1.5096112017176377,
+        "test/single/pixel_image_balanced": 1.5096904166393337,
+        "test/multi/patch_pooled": 3.1471059779612354,
+        "test/multi/patch_image_balanced": 3.1471059779612354,
+        "test/multi/pixel_image_balanced": 3.388985994729673
+      }
+    },
+    {
+      "batch": "lowfreq",
+      "model": "low",
+      "metrics": {
+        "test/all/patch_pooled": 2.39893413569706,
+        "test/all/patch_image_balanced": 2.39893413569706,
+        "test/all/pixel_image_balanced": 2.528580443478854,
+        "test/single/patch_pooled": 1.5586796200312296,
+        "test/single/patch_image_balanced": 1.5586796200312296,
+        "test/single/pixel_image_balanced": 1.5587453237059783,
+        "test/multi/patch_pooled": 3.1606601919548694,
+        "test/multi/patch_image_balanced": 3.1606601919548694,
+        "test/multi/pixel_image_balanced": 3.4077767670112737
+      }
+    },
+    {
+      "batch": "pair",
+      "model": "Pair-M",
+      "metrics": {
+        "test/all/patch_pooled": 2.454641080955637,
+        "test/all/patch_image_balanced": 2.454641080955637,
+        "test/all/pixel_image_balanced": 2.569402745301298,
+        "test/single/patch_pooled": 1.466137622888953,
+        "test/single/patch_image_balanced": 1.466137622888953,
+        "test/single/pixel_image_balanced": 1.4662074988822982,
+        "test/multi/patch_pooled": 3.350761038268425,
+        "test/multi/patch_image_balanced": 3.350761038268425,
+        "test/multi/pixel_image_balanced": 3.5694956322418876
+      }
+    },
+    {
+      "batch": "pair_gaussian",
+      "model": "Pair-Gaussian",
+      "metrics": {
+        "test/all/patch_pooled": 2.629930986775078,
+        "test/all/patch_image_balanced": 2.629930986775078,
+        "test/all/pixel_image_balanced": 2.74057186408682,
+        "test/single/patch_pooled": 1.6445071018694302,
+        "test/single/patch_image_balanced": 1.6445071018694302,
+        "test/single/pixel_image_balanced": 1.6445635892306272,
+        "test/multi/patch_pooled": 3.5232591815026275,
+        "test/multi/patch_image_balanced": 3.5232591815026275,
+        "test/multi/pixel_image_balanced": 3.73414945904991
+      }
+    }
+  ],
+  "limits": "Single seed, historical test already viewed. Cross-batch trends are not single-factor effects. Private paths, RAW, weights and caches excluded."
+}
